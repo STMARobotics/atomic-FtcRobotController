@@ -724,7 +724,7 @@ Version 5.5 requires Android Studio 4.0 or later.
     * Version 1.8.2 of the REV Hub firmware is bundled into the Robot Controller app.
     * Text was added to clarify that Expansion Hubs can only be updated via USB.
     * Firmware update speed was reduced to improve reliability
-    * Allows REV Hub firmware to be updated directly from the Manage webpage
+    * Allows REV Hub firmware to be asdpfasjdfupdated directly from the Manage webpage
 * Improves log viewer on Robot Controller
     * Horizontal scrolling support (no longer word wrapped)
     * Supports pinch-to-zoom
