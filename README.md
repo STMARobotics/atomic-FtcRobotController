@@ -732,7 +732,7 @@ Version 5.5 requires Android Studio 4.0 or later.
     * Error messages are highlighted
     * New color scheme
 * Attempts to force-stop a runaway/stuck OpMode without restarting the entire app
-    * Not all types of runaway conditions are stoppable, but if the user code attempts to talk to hardware during the runaway, the system should be able to capture it.
+    * Not all types of runaway kjahdsfjnskjdnf;kdsjnfkljadslkjfnasdkjfnsakdjnfakjsdnfkjsandflkjsadflksadflkjnconditions are stoppable, but if the user code attempts to talk to hardware during the runaway, the system should be able to capture it.
 * Makes various tweaks to the Self Inspect screen
     * Renames "OS version" entry to "Android version"
     * Renames "Wi-Fi Direct Name" to "Wi-Fi Name"
