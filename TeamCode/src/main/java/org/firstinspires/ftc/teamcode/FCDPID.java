@@ -79,30 +79,36 @@ public class FCDPID extends LinearOpMode {
             frontLeft.setPower(frontLeftPower);
             intake.setPower(intakePower);
 
-            if (gamepad2.x){
+            if (gamepad2.dpad_up){
                 armControl.setPosition(-305);
+                armControl.update();
             }
 
-            else if (gamepad2.a){
+            else if (gamepad2.dpad_down){
                 armControl.setPosition(-580);
+                armControl.update();
+            }
+            else if (gamepad2.dpad_left){
+                armControl.setPosition(12);
+                armControl.update();
             }
 
             else if (gamepad2.b) {
-
-                armControl.setArmPower(0);  // Cut power to the arm
+                armControl.setArmPower(0);
+                armControl.update();
             }
-
             else if (gamepad2.left_stick_y > 0.05 || gamepad2.left_stick_y < -0.05){
                 armControl.setJoystickInput(gamepad2.left_stick_y);
+                armControl.update();
             }
             armControl.update();
 
             telemetry.addData("Half-Speed Mode", halfSpeed ? "ON" : "OFF");
             telemetry.addData("Arm Target Position", armControl.getArmTargetPosition());
             telemetry.addData("Arm Power", armControl.getArmPower());
+            telemetry.addData("Arm Position", armControl.getArmPosition());
             telemetry.addData("Heading", botHeading);
             telemetry.addData("Battery Voltage", String.format("%.2f V", hardwareMap.voltageSensor.get("Control Hub").getVoltage()));
-            telemetry.addData("Arm Position", armControl.getArmPosition());
             telemetry.update();
         }
     }

@@ -29,7 +29,7 @@ public class ArmControl {
         arm.set(armPower);
     }
 
-    public void setPosition(double position){
+    public void setPosition(double position) {
         armTargetPosition = position;
     }
 
@@ -40,16 +40,16 @@ public class ArmControl {
     public double getArmPower() {
         return armPID.calculate(arm.getCurrentPosition(), armTargetPosition);
     }
-    public void resetZero(){
+
+    public void resetZero() {
         arm.stopAndResetEncoder();
     }
 
-    public double getArmPosition(){
+    public double getArmPosition() {
         return arm.getCurrentPosition();
     }
 
-    public void setArmPower(double power){
+    public void setArmPower(double power) {
         arm.set(power);
     }
-
 }
