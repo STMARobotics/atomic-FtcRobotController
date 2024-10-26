@@ -18,10 +18,10 @@ public class PIDTuningTeleOp extends LinearOpMode {
     private double fieldOffset = 0;
     private boolean xHeld = false;
 
-    private double kP = 0.005;
+    private double kP = 0.01;
     private double kI = 0.001;
     private double kD = 0;
-    private double kF = 0.007; // Initial gravity compensation factor
+    private double kF = 0; // Initial gravity compensation factor
 
     private PIDFController armPID;
     private MotorEx arm;

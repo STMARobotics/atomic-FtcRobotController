@@ -15,6 +15,9 @@ public class FCDPID extends LinearOpMode {
     private double fieldOffset = 0;
     private ArmControl armControl;
 
+    // Variables for arm control
+    private double targetArmPosition = 0; // Initialize the target position
+
     @Override
     public void runOpMode() throws InterruptedException {
         final DcMotor frontRight = hardwareMap.dcMotor.get("frontRight");
@@ -79,28 +82,13 @@ public class FCDPID extends LinearOpMode {
             frontLeft.setPower(frontLeftPower);
             intake.setPower(intakePower);
 
-            if (gamepad2.dpad_up){
-                armControl.setPosition(-305);
-                armControl.update();
-            }
 
-            else if (gamepad2.dpad_down){
-                armControl.setPosition(-580);
-                armControl.update();
+            if (gamepad2.dpad_up) {
+                targetArmPosition -= 10;
+            } else if (gamepad2.dpad_down) {
+                targetArmPosition += 10;
             }
-            else if (gamepad2.dpad_left){
-                armControl.setPosition(12);
-                armControl.update();
-            }
-
-            else if (gamepad2.b) {
-                armControl.setArmPower(0);
-                armControl.update();
-            }
-            else if (gamepad2.left_stick_y > 0.05 || gamepad2.left_stick_y < -0.05){
-                armControl.setJoystickInput(gamepad2.left_stick_y);
-                armControl.update();
-            }
+            armControl.setPosition(targetArmPosition);
             armControl.update();
 
             telemetry.addData("Half-Speed Mode", halfSpeed ? "ON" : "OFF");
