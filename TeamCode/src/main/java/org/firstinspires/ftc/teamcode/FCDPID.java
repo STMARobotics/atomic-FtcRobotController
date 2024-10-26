@@ -15,8 +15,7 @@ public class FCDPID extends LinearOpMode {
     private double fieldOffset = 0;
     private ArmControl armControl;
 
-    // Variables for arm control
-    private double targetArmPosition = 0; // Initialize the target position
+    private double targetArmPosition = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -88,6 +87,8 @@ public class FCDPID extends LinearOpMode {
             } else if (gamepad2.dpad_down) {
                 targetArmPosition += 10;
             }
+
+
             armControl.setPosition(targetArmPosition);
             armControl.update();
 

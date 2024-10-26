@@ -1,4 +1,4 @@
-# OH YEAH, VECTORRRRRRRR
+# VECTORRRRR, that's me, cuz im committing crimes...with both DIRECTION, AND MAGNITUDE OH YEAHHHH
 -
 -
 -
@@ -21,4 +21,4 @@
 -
 -
 -
-# KING BOBBBBB
+# KING BOBBBBB 👑👏👏👏👏
