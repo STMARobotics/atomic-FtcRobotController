@@ -1,28 +1,3 @@
-# OH YEAH, VECTORRRRRR
-# KING BOBBBBBB
-# OH YEAH, VECTORRRRRR
-# KING BOBBBBBB
-# OH YEAH, VECTORRRRRR
-# KING BOBBBBBB
-# OH YEAH, VECTORRRRRR
-# KING BOBBBBBB
-# OH YEAH, VECTORRRRRR
-# KING BOBBBBBB
-# OH YEAH, VECTORRRRRR
-# KING BOBBBBBB
-# OH YEAH, VECTORRRRRR
-# KING BOBBBBBB
-# OH YEAH, VECTORRRRRR
-# KING BOBBBBBB
-# OH YEAH, VECTORRRRRR
-# KING BOBBBBBB
-
-
-
-
-
-
-why wont it let me make a new class android studio bugigng:
 package org.firstinspires.ftc.teamcode;
 
 import android.os.Build;
@@ -43,13 +18,13 @@ import java.time.LocalDateTime;
 
 @TeleOp
 public class RecordAuto extends LinearOpMode {
-private boolean halfSpeed = false;
-private boolean lastButtonState = false;
-private boolean recording = false;
-private StringBuilder dataBuffer = new StringBuilder();
-private double targetArmPosition = 0;
-private double fieldOffset = 0;
-private ArmControl armControl;
+    private boolean halfSpeed = false;
+    private boolean lastButtonState = false;
+    private boolean recording = false;
+    private StringBuilder dataBuffer = new StringBuilder();
+    private double targetArmPosition = 0;
+    private double fieldOffset = 0;
+    private ArmControl armControl;
 
     private static final String SERVER_URL = "http://192.168.43.155:5000/record_data";
 
@@ -186,4 +161,3 @@ private ArmControl armControl;
         }
     }
 }
-

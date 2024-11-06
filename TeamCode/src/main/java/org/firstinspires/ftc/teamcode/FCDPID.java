@@ -48,14 +48,13 @@ public class FCDPID extends LinearOpMode {
 
             double y = gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x * 1.1;
-            double rx = gamepad1.right_stick_x;
+            double rx = gamepad1.right_stick_x; // Rotation input
             double iF = gamepad2.right_trigger * -0.45;
             double iR = gamepad2.left_trigger * 0.45;
 
             if (halfSpeed) {
                 y *= 0.3;
                 x *= 0.3;
-                rx *= 0.3;
             }
 
             if (gamepad1.y) {
@@ -64,9 +63,29 @@ public class FCDPID extends LinearOpMode {
 
             double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) - fieldOffset;
             double headingRad = Math.toRadians(botHeading);
-            double temp = y * Math.cos(headingRad) - x * Math.sin(headingRad);
-            x = y * Math.sin(headingRad) + x * Math.cos(headingRad);
-            y = temp;
+
+            // Check if the bot is facing roughly forward/backward
+            boolean isFacingForwardBackward = Math.abs(botHeading) < 45 || Math.abs(botHeading) > 315;
+
+            if (isFacingForwardBackward) {
+                // Normal movement controls
+                double temp = y * Math.cos(headingRad) - x * Math.sin(headingRad);
+                x = y * Math.sin(headingRad) + x * Math.cos(headingRad);
+                y = temp;
+            } else {
+                // Reverse left/right controls
+                double temp = y * Math.cos(headingRad) + x * Math.sin(headingRad);
+                x = -y * Math.sin(headingRad) + x * Math.cos(headingRad);
+                y = temp;
+            }
+
+            // Set a constant turning speed
+            double turningSpeed = 0.3;
+            if (Math.abs(rx) > 0.1) { // Only apply turning when there is input
+                rx = turningSpeed * Math.signum(rx);
+            } else {
+                rx = 0;
+            }
 
             double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
             double frontRightPower = (y + x + rx) / denominator;
@@ -81,11 +100,10 @@ public class FCDPID extends LinearOpMode {
             frontLeft.setPower(frontLeftPower);
             intake.setPower(intakePower);
 
-
             if (gamepad2.dpad_up) {
-                targetArmPosition -= 10;
+                targetArmPosition -= 5;
             } else if (gamepad2.dpad_down) {
-                targetArmPosition += 10;
+                targetArmPosition += 5;
             }
 
 
