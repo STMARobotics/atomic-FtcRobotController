@@ -101,9 +101,11 @@ public class FCDPID extends LinearOpMode {
             intake.setPower(intakePower);
 
             if (gamepad2.dpad_up) {
-                targetArmPosition -= 5;
+                targetArmPosition -= 2;
             } else if (gamepad2.dpad_down) {
-                targetArmPosition += 5;
+                targetArmPosition += 2;
+            } else if (gamepad2.right_stick_y > 0.1 || gamepad2.right_stick_y < -0.1) {
+                targetArmPosition += gamepad2.right_stick_y * 5;
             }
 
 
