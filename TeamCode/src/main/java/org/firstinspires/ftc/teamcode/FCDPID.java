@@ -92,7 +92,7 @@ public class FCDPID extends LinearOpMode {
             double rearRightPower = (y - x + rx) / denominator;
             double rearLeftPower = (y + x - rx) / denominator;
             double frontLeftPower = (y - x - rx) / denominator;
-            double intakePower = (iF + iR) / denominator;
+            double intakePower = (iF + iR);
 
             frontRight.setPower(frontRightPower);
             rearRight.setPower(rearRightPower);
