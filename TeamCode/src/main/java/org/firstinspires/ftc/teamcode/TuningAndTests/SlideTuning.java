@@ -6,17 +6,17 @@ import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "Slide and Servo Test", group = "Test")
-public class slideTuning extends OpMode {
+public class SlideTuning extends OpMode {
     private SlideControl slideControl;
     private Servo servo;
 
-    private double initialServoPosition = 0;  // Initial position of the servo in degrees (0 = full left, 1 = full right)
+    private double initialServoPosition = 0;  // Initial position of the servo in degrees (0 = start of rotation)
 
     @Override
     public void init() {
         slideControl = new SlideControl(hardwareMap);
         servo = hardwareMap.get(Servo.class, "servo");  // Assuming servo is named "servo" in the configuration
-        initialServoPosition = servo.getPosition();  // Record the servo's starting position as 0
+        initialServoPosition = 0;  // Reset the initial position of the servo to 0 degrees
 
         telemetry.addData("Status", "Initialized");
         telemetry.addData("Servo Initial Position", initialServoPosition);
@@ -40,13 +40,17 @@ public class slideTuning extends OpMode {
             telemetry.addData("Slide Control", "Maintaining Target Position");
         }
 
-        // Control the servo position using gamepad2.right_stick_y
-        double servoPosition = initialServoPosition + gamepad2.right_stick_y * 0.5;  // Scale for servo range (0 to 1)
-        servoPosition = Math.min(1, Math.max(0, servoPosition));  // Ensure servo stays within 0 to 1 range
-        servo.setPosition(servoPosition);
+        // Control the servo position using gamepad2.right_stick_y (mapped to 0-360 degrees)
+        double servoPosition = initialServoPosition + (gamepad2.right_stick_y * 180);  // Map stick input to 360 degrees
+        servoPosition = Math.min(360, Math.max(0, servoPosition));  // Ensure servo position is between 0 and 360 degrees
+
+        // Assuming we are using a motor or a continuous servo mapped to 0-360 degrees
+        // Map 0-360 degrees to 0-1 range for the servo control
+        double servoPower = servoPosition / 360;  // Normalize the value to 0-1 range
+        servo.setPosition(servoPower);
 
         telemetry.addData("Slide Position (Degrees)", slideControl.getCurrentPositionDegrees());  // Show current slide position
-        telemetry.addData("Servo Target Position", servoPosition);  // Show target servo position
+        telemetry.addData("Servo Target Position (Degrees)", servoPosition);  // Show target servo position (0-360 degrees)
         telemetry.update();
     }
 
