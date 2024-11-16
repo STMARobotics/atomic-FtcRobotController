@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.teamcode.SlideControl;
+import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
 
 @TeleOp(name = "Slide Test", group = "Test")
 public class TestSlide extends OpMode {
