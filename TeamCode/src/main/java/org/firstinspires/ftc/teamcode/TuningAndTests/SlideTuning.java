@@ -9,8 +9,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class SlideTuning extends OpMode {
     private SlideControl slideControl;
     private Servo servo;
+    double servoInput = 0; // Initial position of the servo
 
     private double initialServoPosition = 0;  // Initial position of the servo in degrees (0 = start of rotation)
+    private boolean isZeroed = false;  // Flag to track if the zero position has been set
 
     @Override
     public void init() {
@@ -26,13 +28,18 @@ public class SlideTuning extends OpMode {
     public void loop() {
         // Zero the slide when gamepad2.y is pressed
         if (gamepad2.y) {
-            slideControl.resetZeroPosition();
-            telemetry.addData("Zero Position", "Slide Reset to Zero");
+            slideControl.resetZeroPosition();  // Reset slide motor to its current position
+            initialServoPosition = 0;  // Reset the initial servo position to 0 degrees
+            servo.setPosition(0);  // Set the servo position to 0 degrees (start of rotation)
+            isZeroed = true;  // Mark the system as zeroed
+            telemetry.addData("Zero Position", "Slide and Servo Reset to Zero");
         }
 
         // Control the slide degrees using gamepad2.left_stick_y
         double slidePower = -gamepad2.left_stick_y;  // Invert if necessary for correct direction
-        if (Math.abs(slidePower) > 0.05) {
+
+        // Only control slide if joystick movement exceeds the threshold (0.1 or -0.1)
+        if (Math.abs(slidePower) > 0.1) {
             slideControl.setMotorPower(slidePower);  // Directly set motor power for manual control
             telemetry.addData("Slide Manual Control", "Power: %.2f", slidePower);
         } else {
@@ -40,17 +47,30 @@ public class SlideTuning extends OpMode {
             telemetry.addData("Slide Control", "Maintaining Target Position");
         }
 
-        // Control the servo position using gamepad2.right_stick_y (mapped to 0-360 degrees)
-        double servoPosition = initialServoPosition + (gamepad2.right_stick_y * 180);  // Map stick input to 360 degrees
-        servoPosition = Math.min(360, Math.max(0, servoPosition));  // Ensure servo position is between 0 and 360 degrees
 
-        // Assuming we are using a motor or a continuous servo mapped to 0-360 degrees
-        // Map 0-360 degrees to 0-1 range for the servo control
-        double servoPower = servoPosition / 360;  // Normalize the value to 0-1 range
-        servo.setPosition(servoPower);
+        if (gamepad2.right_stick_y > 0.1) {
+            servoInput += 1;
+        } else if (gamepad2.right_stick_y < -0.1) {
+            servoInput -= 1;
+        } else if (gamepad2.dpad_up){
+            servoInput = -10;
+        } else if (gamepad2.dpad_down){
+            servoInput = -80;
+        } else if (gamepad2.dpad_right){
+            servoInput = 65;
+        }
+
+// Hard stop at -90 and 90 degrees
+        servoInput = Math.max(-90, Math.min(90, servoInput));
+
+// Convert to normalized servo position (0-1 range for the servo)
+        double normalizedServoPosition = (servoInput + 90) / 180;
+
+        servo.setPosition(normalizedServoPosition);
+
 
         telemetry.addData("Slide Position (Degrees)", slideControl.getCurrentPositionDegrees());  // Show current slide position
-        telemetry.addData("Servo Target Position (Degrees)", servoPosition);  // Show target servo position (0-360 degrees)
+        telemetry.addData("Servo Target Position (Degrees)", servoInput);  // Show target servo position (0-300 degrees)
         telemetry.update();
     }
 

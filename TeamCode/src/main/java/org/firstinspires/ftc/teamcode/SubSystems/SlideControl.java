@@ -12,7 +12,7 @@ public class SlideControl {
     private static final int DEGREES_PER_ROTATION = 360;
 
     // PID constants
-    private double kP = 0.1, kI = 0.0, kD = 0.0;
+    private double kP = 0.001, kI = 0.001, kD = 0.0;
     private double integralSum = 0, lastError = 0;
 
     // Target positions for different modes in degrees
