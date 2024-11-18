@@ -15,7 +15,7 @@ public class SlideControl {
     private ElapsedTime runtime = new ElapsedTime();
 
     // PID control variables
-    private double kP = 0.005, kI = 0, kD = 0.0;  // PID constants
+    private double kP = 0.01, kI = 0, kD = 0.0;  // PID constants
     private double previousError = 0, integral = 0;
 
     public SlideControl(DcMotorEx slide, Servo servo) {
@@ -76,6 +76,10 @@ public class SlideControl {
         currentPosition = slide.getCurrentPosition();
         updatePIDControl();
     }
+
+//    public void servoPosition(double currentPosition) {
+//
+//    }
 
     // Telemetry update function
     public void updateTelemetry(Telemetry telemetry) {

@@ -3,11 +3,15 @@ package org.firstinspires.ftc.teamcode.MainTeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.SubSystems.ArmControl;
+import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
 
 @TeleOp
 public class FCDPID extends LinearOpMode {
@@ -15,8 +19,11 @@ public class FCDPID extends LinearOpMode {
     private boolean lastButtonState = false;
     private double fieldOffset = 0;
     private ArmControl armControl;
-
+    private SlideControl slideControl;
+    double targetSlidePosition;
     private double targetArmPosition = 0;
+    double targetServoPosition = 65;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -25,6 +32,9 @@ public class FCDPID extends LinearOpMode {
         final DcMotor rearLeft = hardwareMap.dcMotor.get("rearLeft");
         final DcMotor frontLeft = hardwareMap.dcMotor.get("frontLeft");
         final DcMotor intake = hardwareMap.dcMotor.get("intake");
+        final DcMotorEx slideMotor = hardwareMap.get(DcMotorEx.class, "slide");
+        final Servo slideServo = hardwareMap.get(Servo.class, "servo");
+        slideControl = new SlideControl(slideMotor, slideServo);
 
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         rearRight.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -39,6 +49,8 @@ public class FCDPID extends LinearOpMode {
         armControl.resetZero();
         waitForStart();
         if (isStopRequested()) return;
+
+        slideControl.resetEncoder();
 
         while (opModeIsActive()) {
             boolean currentButtonState = gamepad1.right_stick_button;
@@ -101,24 +113,39 @@ public class FCDPID extends LinearOpMode {
             frontLeft.setPower(frontLeftPower);
             intake.setPower(intakePower);
 
-            if (gamepad2.dpad_up) {
-                targetArmPosition -= 10;
-            } else if (gamepad2.dpad_down) {
-                targetArmPosition += 10;
+
+            if (gamepad2.left_stick_y > 0.1 || gamepad2.left_stick_y < -0.1) {
+                targetSlidePosition += gamepad2.left_stick_y * 30;
             } else if (gamepad2.right_stick_y > 0.1 || gamepad2.right_stick_y < -0.1) {
                 targetArmPosition += gamepad2.right_stick_y * 30;
+            } else if (gamepad2.dpad_up) {
+                targetServoPosition = -10;
+            } else if (gamepad2.dpad_right) {
+                targetServoPosition = 65;
+            } else if (gamepad2.dpad_down) {
+                targetServoPosition = -80;
             }
 
-
+            slideControl.setTargetPosition(targetSlidePosition);
+            slideControl.setServoPosition(targetServoPosition);
             armControl.setPosition(targetArmPosition);
             armControl.update();
+            slideControl.update();
+
+            String emptyVariable = " ";
 
             telemetry.addData("Half-Speed Mode", halfSpeed ? "ON" : "OFF");
+            telemetry.speak("king bob");
+            telemetry.addData("", emptyVariable);
             telemetry.addData("Arm Target Position", armControl.getArmTargetPosition());
-            telemetry.addData("Arm Power", armControl.getArmPower());
             telemetry.addData("Arm Position", armControl.getArmPosition());
+            telemetry.addData("Arm Power", armControl.getArmPower());
+            telemetry.addData("", emptyVariable);
+            telemetry.addData("Slide Target Position", slideControl.getTargetPosition());
+            telemetry.addData("Slide Position", slideControl.getCurrentPosition());
+            telemetry.addData("Servo Position", targetServoPosition);
+            telemetry.addData("", emptyVariable);
             telemetry.addData("Heading", botHeading);
-            telemetry.addData("Battery Voltage", String.format("%.2f V", hardwareMap.voltageSensor.get("Control Hub").getVoltage()));
             telemetry.update();
         }
     }
