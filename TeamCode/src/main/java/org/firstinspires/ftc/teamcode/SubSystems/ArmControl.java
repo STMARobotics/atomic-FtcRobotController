@@ -10,7 +10,7 @@ public class ArmControl {
     private double armTargetPosition = 0.0;
 
     // PID constants
-    private static final double kP = 0.01;
+    private static final double kP = 0.0075;
     private static final double kI = 0;
     private static final double kD = 0;
     private static final double kF = 0.001;
@@ -21,7 +21,7 @@ public class ArmControl {
     }
 
     public void setJoystickInput(double joystickInput) {
-        armTargetPosition += -joystickInput * 5;
+        armTargetPosition += joystickInput * 5;
     }
 
     public void update() {

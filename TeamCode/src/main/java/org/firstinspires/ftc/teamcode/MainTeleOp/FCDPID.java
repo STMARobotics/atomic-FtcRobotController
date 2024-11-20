@@ -24,7 +24,6 @@ public class FCDPID extends LinearOpMode {
     private double targetArmPosition = 0;
     double targetServoPosition = 65;
 
-
     @Override
     public void runOpMode() throws InterruptedException {
         final DcMotor frontRight = hardwareMap.dcMotor.get("frontRight");
@@ -113,17 +112,45 @@ public class FCDPID extends LinearOpMode {
             frontLeft.setPower(frontLeftPower);
             intake.setPower(intakePower);
 
-
+            double currentSlidePosition = slideControl.getCurrentPosition();
             if (gamepad2.left_stick_y > 0.1 || gamepad2.left_stick_y < -0.1) {
                 targetSlidePosition += gamepad2.left_stick_y * 30;
-            } else if (gamepad2.right_stick_y > 0.1 || gamepad2.right_stick_y < -0.1) {
+            }
+
+            if (gamepad2.right_stick_y > 0.1 || gamepad2.right_stick_y < -0.1) {
                 targetArmPosition += gamepad2.right_stick_y * 30;
-            } else if (gamepad2.dpad_up) {
+            }
+
+            if (gamepad2.dpad_up) {
                 targetServoPosition = -10;
-            } else if (gamepad2.dpad_right) {
+            }
+
+            if (gamepad2.dpad_right) {
                 targetServoPosition = 65;
-            } else if (gamepad2.dpad_down) {
+            }
+
+            if (gamepad2.dpad_down) {
                 targetServoPosition = -80;
+            }
+
+            if (gamepad2.y) {
+                targetSlidePosition = -3550;
+            }
+
+            if (gamepad2.a) {
+                targetSlidePosition = 0;
+            }
+
+            if (gamepad2.b) {
+                targetSlidePosition = -1820;
+            }
+
+            if (currentSlidePosition > 10 || targetSlidePosition > 10) {
+                targetSlidePosition = 0;
+            }
+
+            if (targetSlidePosition < -3800 || currentSlidePosition < -3800) {
+                targetSlidePosition = -3800;
             }
 
             slideControl.setTargetPosition(targetSlidePosition);
