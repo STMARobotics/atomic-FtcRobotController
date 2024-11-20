@@ -77,14 +77,14 @@ public class FCDPID extends LinearOpMode {
             double headingRad = Math.toRadians(botHeading);
 
             // Check if the bot is facing roughly forward/backward
-            boolean isFacingForwardBackward = Math.abs(botHeading) < 45 || Math.abs(botHeading) > 315;
+//            //boolean isFacingForwardBackward = Math.abs(botHeading) < 45 || Math.abs(botHeading) > 315;
 
-            if (isFacingForwardBackward) {
-                // Normal movement controls
-                double temp = y * Math.cos(headingRad) - x * Math.sin(headingRad);
-                x = y * Math.sin(headingRad) + x * Math.cos(headingRad);
-                y = temp;
-            } else {
+//            if (isFacingForwardBackward) {
+//                // Normal movement controls
+//                double temp = y * Math.cos(headingRad) - x * Math.sin(headingRad);
+//                x = y * Math.sin(headingRad) + x * Math.cos(headingRad);
+//                y = temp;
+       {
                 // Reverse left/right controls
                 double temp = y * Math.cos(headingRad) + x * Math.sin(headingRad);
                 x = -y * Math.sin(headingRad) + x * Math.cos(headingRad);
@@ -138,18 +138,18 @@ public class FCDPID extends LinearOpMode {
             }
 
             if (gamepad2.a) {
-                targetSlidePosition = 0;
+                targetSlidePosition = -5;
             }
 
             if (gamepad2.b) {
                 targetSlidePosition = -1820;
             }
 
-            if (currentSlidePosition > 10 || targetSlidePosition > 10) {
+            if (targetSlidePosition > 10) {
                 targetSlidePosition = 0;
             }
 
-            if (targetSlidePosition < -3800 || currentSlidePosition < -3800) {
+            if (targetSlidePosition < -3800) {
                 targetSlidePosition = -3800;
             }
 
