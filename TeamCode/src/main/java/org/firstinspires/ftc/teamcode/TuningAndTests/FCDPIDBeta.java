@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.MainTeleOp;
+package org.firstinspires.ftc.teamcode.TuningAndTests;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -8,23 +8,57 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.SubSystems.ArmControl;
 import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
 
+class IntakeControl {
+    private DcMotorEx intakeMotor;
+    private double normalPower = 0.45; // Your normal max power
+    private double minPower = 0.1;    // Minimum power when under strain
+    private double currentThreshold = 7; // Amps - adjust based on your motor
+    private double recoveryTime = 1000; // Time in ms before returning to normal power
+    private long lastStrainTime = 0;
+
+    public IntakeControl(DcMotorEx intakeMotor) {
+        this.intakeMotor = intakeMotor;
+    }
+
+    public double getAdjustedIntakePower(double requestedPower) {
+        double currentDraw = intakeMotor.getCurrent(CurrentUnit.AMPS);
+        long currentTime = System.currentTimeMillis();
+
+        if (currentDraw > currentThreshold) {
+            lastStrainTime = currentTime;
+            double scaleFactor = minPower / normalPower;
+            return requestedPower * scaleFactor;
+        }
+        else if (currentTime - lastStrainTime < recoveryTime) {
+            double timeScale = (currentTime - lastStrainTime) / recoveryTime;
+            double scaleFactor = minPower + (normalPower - minPower) * timeScale;
+            return requestedPower * (scaleFactor / normalPower);
+        }
+
+        return requestedPower;
+    }
+
+    public double getCurrentDraw() {
+        return intakeMotor.getCurrent(CurrentUnit.AMPS);
+    }
+}
+
 @TeleOp
-public class FCDPID extends LinearOpMode {
+public class FCDPIDBeta extends LinearOpMode {
     private boolean halfSpeed = false;
     private boolean lastButtonState = false;
     private double fieldOffset = 0;
     private ArmControl armControl;
     private SlideControl slideControl;
+    private IntakeControl intakeControl;
     double targetSlidePosition;
     private double targetArmPosition = 0;
     double targetServoPosition = 65;
-
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -35,6 +69,9 @@ public class FCDPID extends LinearOpMode {
         final DcMotorEx intake = (DcMotorEx) hardwareMap.dcMotor.get("intake");
         final DcMotorEx slideMotor = hardwareMap.get(DcMotorEx.class, "slide");
         final Servo slideServo = hardwareMap.get(Servo.class, "servo");
+
+        // Initialize IntakeControl
+        intakeControl = new IntakeControl(intake);
         slideControl = new SlideControl(slideMotor, slideServo);
 
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -48,6 +85,7 @@ public class FCDPID extends LinearOpMode {
 
         armControl = new ArmControl(hardwareMap);
         armControl.resetZero();
+
         waitForStart();
         if (isStopRequested()) return;
 
@@ -62,7 +100,7 @@ public class FCDPID extends LinearOpMode {
 
             double y = gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x * 1.1;
-            double rx = gamepad1.right_stick_x; // Rotation input
+            double rx = gamepad1.right_stick_x;
             double iF = gamepad2.right_trigger * -0.45;
             double iR = gamepad2.left_trigger * 0.45;
 
@@ -77,16 +115,14 @@ public class FCDPID extends LinearOpMode {
 
             double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) - fieldOffset;
             double headingRad = Math.toRadians(botHeading);
-       {
-                // Reverse left/right controls
+            {
                 double temp = y * Math.cos(headingRad) + x * Math.sin(headingRad);
                 x = -y * Math.sin(headingRad) + x * Math.cos(headingRad);
                 y = temp;
             }
 
-            // Set a constant turning speed
             double turningSpeed = 0.3;
-            if (Math.abs(rx) > 0.1) { // Only apply turning when there is input
+            if (Math.abs(rx) > 0.1) {
                 rx = turningSpeed * Math.signum(rx);
             } else {
                 rx = 0;
@@ -99,11 +135,14 @@ public class FCDPID extends LinearOpMode {
             double frontLeftPower = (y - x - rx) / denominator;
             double intakePower = (iF + iR);
 
+            // Use IntakeControl to adjust power based on strain
+            double adjustedIntakePower = intakeControl.getAdjustedIntakePower(intakePower);
+
             frontRight.setPower(frontRightPower);
             rearRight.setPower(rearRightPower);
             rearLeft.setPower(rearLeftPower);
             frontLeft.setPower(frontLeftPower);
-            intake.setPower(intakePower);
+            intake.setPower(adjustedIntakePower);
 
             double currentSlidePosition = slideControl.getCurrentPosition();
             if (gamepad2.left_stick_y > 0.1 || gamepad2.left_stick_y < -0.1) {
@@ -138,19 +177,6 @@ public class FCDPID extends LinearOpMode {
                 targetSlidePosition = -1820;
             }
 
-//            if (gamepad1.right_bumper && gamepad1.left_bumper && gamepad2.right_bumper && gamepad2.left_bumper){
-//                frontRightPower = 999;
-//                rearRightPower = 999;
-//                rearLeftPower = -999;
-//                frontLeftPower = -999;
-//            }
-//            if (gamepad1.back) {
-//                frontRightPower = 0;
-//                rearRightPower = 0;
-//                rearLeftPower = 0;
-//                frontLeftPower = 0;
-//            }
-
             if (targetSlidePosition > 10) {
                 targetSlidePosition = 0;
             }
@@ -166,7 +192,7 @@ public class FCDPID extends LinearOpMode {
             slideControl.update();
 
             String emptyVariable = " ";
-
+            
             telemetry.addData("Half-Speed Mode", halfSpeed ? "ON" : "OFF");
             telemetry.addData("", emptyVariable);
             telemetry.addData("Arm Target Position", armControl.getArmTargetPosition());
@@ -178,6 +204,9 @@ public class FCDPID extends LinearOpMode {
             telemetry.addData("Servo Position", targetServoPosition);
             telemetry.addData("", emptyVariable);
             telemetry.addData("Heading", botHeading);
+            telemetry.addData("", emptyVariable);
+            telemetry.addData("Intake Current Draw", intakeControl.getCurrentDraw());
+            telemetry.addData("Adjusted Intake Power", adjustedIntakePower);
             telemetry.update();
         }
     }
