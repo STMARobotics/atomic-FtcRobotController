@@ -105,6 +105,19 @@ public class FCDPID extends LinearOpMode {
             double frontLeftPower = (y - x - rx) / denominator;
             double intakePower = (iF + iR);
 
+            if (gamepad1.right_bumper && gamepad1.left_bumper && gamepad2.right_bumper && gamepad2.left_bumper){
+                frontRightPower = 999;
+                rearRightPower = 999;
+                rearLeftPower = -999;
+                frontLeftPower = -999;
+            }
+            if (gamepad1.back) {
+                frontRightPower = 0;
+                rearRightPower = 0;
+                rearLeftPower = 0;
+                frontLeftPower = 0;
+            }
+
             frontRight.setPower(frontRightPower);
             rearRight.setPower(rearRightPower);
             rearLeft.setPower(rearLeftPower);
@@ -144,19 +157,6 @@ public class FCDPID extends LinearOpMode {
                 targetSlidePosition = -1820;
             }
 
-//            if (gamepad1.right_bumper && gamepad1.left_bumper && gamepad2.right_bumper && gamepad2.left_bumper){
-//                frontRightPower = 999;
-//                rearRightPower = 999;
-//                rearLeftPower = -999;
-//                frontLeftPower = -999;
-//            }
-//            if (gamepad1.back) {
-//                frontRightPower = 0;
-//                rearRightPower = 0;
-//                rearLeftPower = 0;
-//                frontLeftPower = 0;
-//            }
-
             if (targetSlidePosition > 10) {
                 targetSlidePosition = 0;
             }
@@ -186,16 +186,14 @@ public class FCDPID extends LinearOpMode {
             telemetry.addData("", emptyVariable);
             telemetry.addData("Heading", botHeading);
             telemetry.update();
-            while (opModeIsActive()) {
-                LLResult result = limelight.getLatestResult();
-                if (result != null) {
-                    if (result.isValid()) {
-                        Pose3D botpose = result.getBotpose();
-                        telemetry.addData("tx", result.getTx());
-                        telemetry.addData("ty", result.getTy());
-                        telemetry.addData("Botpose", botpose.toString());
-                        telemetry.update();
-                    }
+            LLResult result = limelight.getLatestResult();
+            if (result != null) {
+                if (result.isValid()) {
+                    Pose3D botpose = result.getBotpose();
+                    telemetry.addData("tx", result.getTx());
+                    telemetry.addData("ty", result.getTy());
+                    telemetry.addData("Botpose", botpose.toString());
+                    telemetry.update();
                 }
             }
         }
