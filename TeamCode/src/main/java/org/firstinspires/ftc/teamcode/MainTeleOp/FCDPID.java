@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.SubSystems.ArmControl;
@@ -24,6 +26,8 @@ public class FCDPID extends LinearOpMode {
     double targetSlidePosition;
     private double targetArmPosition = 0;
     double targetServoPosition = 65;
+    private Limelight3A limelight;
+    private DcMotor frontRight, rearRight, rearLeft, frontLeft;
 
 
     @Override
@@ -35,6 +39,7 @@ public class FCDPID extends LinearOpMode {
         final DcMotorEx intake = (DcMotorEx) hardwareMap.dcMotor.get("intake");
         final DcMotorEx slideMotor = hardwareMap.get(DcMotorEx.class, "slide");
         final Servo slideServo = hardwareMap.get(Servo.class, "servo");
+        limelight = hardwareMap.get(Limelight3A.class, "limelight");
         slideControl = new SlideControl(slideMotor, slideServo);
 
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -178,6 +183,7 @@ public class FCDPID extends LinearOpMode {
             telemetry.addData("Servo Position", targetServoPosition);
             telemetry.addData("", emptyVariable);
             telemetry.addData("Heading", botHeading);
+            telemetry.addData("", emptyVariable);
             telemetry.update();
         }
     }

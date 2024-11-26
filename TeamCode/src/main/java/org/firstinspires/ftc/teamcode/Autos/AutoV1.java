@@ -33,6 +33,7 @@ public class AutoV1 extends LinearOpMode {
         DcMotor frontLeft = hardwareMap.dcMotor.get("frontLeft");
         DcMotorEx slideMotor = hardwareMap.get(DcMotorEx.class, "slide");
         Servo slideServo = hardwareMap.get(Servo.class, "servo");
+//        rearRight.isBusy();
 
         // Initialize subsystems
         armControl = new ArmControl(hardwareMap);
@@ -166,7 +167,7 @@ public class AutoV1 extends LinearOpMode {
         stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
     }
 
-    private void waitForSlideToReachTarget(SlideControl slideControl, double targetPosition) throws InterruptedException {
+    public void waitForSlideToReachTarget(SlideControl slideControl, double targetPosition) throws InterruptedException {
         while (opModeIsActive() && Math.abs(slideControl.getCurrentPosition() - targetPosition) > 1) {
             slideControl.update();
             telemetry.addData("Current Slide Position", slideControl.getCurrentPosition());
