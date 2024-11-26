@@ -13,6 +13,7 @@ import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.SubSystems.ArmControl;
 import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
 
@@ -82,7 +83,7 @@ public class FCDPID extends LinearOpMode {
 
             double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) - fieldOffset;
             double headingRad = Math.toRadians(botHeading);
-       {
+            {
                 // Reverse left/right controls
                 double temp = y * Math.cos(headingRad) + x * Math.sin(headingRad);
                 x = -y * Math.sin(headingRad) + x * Math.cos(headingRad);
@@ -170,6 +171,7 @@ public class FCDPID extends LinearOpMode {
             armControl.update();
             slideControl.update();
 
+
             String emptyVariable = " ";
 
             telemetry.addData("Half-Speed Mode", halfSpeed ? "ON" : "OFF");
@@ -183,8 +185,19 @@ public class FCDPID extends LinearOpMode {
             telemetry.addData("Servo Position", targetServoPosition);
             telemetry.addData("", emptyVariable);
             telemetry.addData("Heading", botHeading);
-            telemetry.addData("", emptyVariable);
             telemetry.update();
+            while (opModeIsActive()) {
+                LLResult result = limelight.getLatestResult();
+                if (result != null) {
+                    if (result.isValid()) {
+                        Pose3D botpose = result.getBotpose();
+                        telemetry.addData("tx", result.getTx());
+                        telemetry.addData("ty", result.getTy());
+                        telemetry.addData("Botpose", botpose.toString());
+                        telemetry.update();
+                    }
+                }
+            }
         }
     }
 }
