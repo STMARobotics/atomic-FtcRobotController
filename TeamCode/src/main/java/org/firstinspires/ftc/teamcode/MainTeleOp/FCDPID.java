@@ -105,6 +105,7 @@ public class FCDPID extends LinearOpMode {
             double frontLeftPower = (y - x - rx) / denominator;
             double intakePower = (iF + iR);
 
+            //beyblade protocol
             if (gamepad1.right_bumper && gamepad1.left_bumper && gamepad2.right_bumper && gamepad2.left_bumper){
                 frontRightPower = 999;
                 rearRightPower = 999;
