@@ -8,14 +8,15 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
-
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.SubSystems.ArmControl;
 import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
+import org.firstinspires.ftc.teamcode.SubSystems.AutoSubsystem;
 
 @Autonomous
-public class AutoV1 extends LinearOpMode {
+public class AutoV2 extends LinearOpMode {
 
+    private AutoSubsystem autoSubsystem;
     private ArmControl armControl;
     private SlideControl slideControl;
     private IMU imu;
@@ -76,26 +77,29 @@ public class AutoV1 extends LinearOpMode {
         moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, 0.3, 1450);
         stopDrivetrain(frontLeft, rearLeft, rearRight, frontRight);
 
-        // Move to high basket
-        targetSlidePosition = -3550;
-        slideControl.setTargetPosition(targetSlidePosition);
-        waitForSlideToReachTarget(slideControl, targetSlidePosition);
+//        // Move to high basket
+//        targetSlidePosition = -3550;
+//        slideControl.setTargetPosition(targetSlidePosition);
+//        waitForSlideToReachTarget(slideControl, targetSlidePosition);
+//
+//        // Dump the block
+//        slideControl.setServoPosition(-80);
+//        slideControl.update();
+//        sleep(1750);
+//
+//        // Set bucket to home position
+//        targetServoPosition = -10; // Normalized value for 10 degrees
+//        slideControl.setServoPosition(targetServoPosition);
+//        sleep(250);
+//
+//        // Put slide down
+//        targetSlidePosition = 0;
+//        slideControl.setTargetPosition(targetSlidePosition);
+//        waitForSlideToReachTarget(slideControl, targetSlidePosition);
+//        sleep(500); // Allow time for slide to return to base
 
-        // Dump the block
-        slideControl.setServoPosition(-80);
-        slideControl.update();
-        sleep(1750);
-
-        // Set bucket to home position
-        targetServoPosition = -10; // Normalized value for 10 degrees
-        slideControl.setServoPosition(targetServoPosition);
-        sleep(250);
-
-        // Put slide down
-        targetSlidePosition = 0;
-        slideControl.setTargetPosition(targetSlidePosition);
-        waitForSlideToReachTarget(slideControl, targetSlidePosition);
-        sleep(500); // Allow time for slide to return to base
+        //beta test of the AutoSubsystem
+        autoSubsystem.dumpSampleHigh();
 
         rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, 0);
 

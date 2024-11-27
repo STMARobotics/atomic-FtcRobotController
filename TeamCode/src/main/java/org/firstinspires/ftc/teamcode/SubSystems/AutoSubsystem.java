@@ -25,6 +25,7 @@ public class AutoSubsystem {
     private double targetArmPosition = 0;
     double targetServoPosition = 65;
     double currentSlidePosition;
+    double currentArmPosition;
 
     public void dumpSampleHigh(){
         slideControl.setTargetPosition(-3550);
@@ -36,6 +37,39 @@ public class AutoSubsystem {
         delay(200);
         slideControl.setTargetPosition(0);
         waitForSlide();
+    }
+
+    public void armOut(){
+        slideControl.setTargetPosition(-1820);
+        waitForSlide();
+        slideControl.setServoPosition(-10);
+        delay(250);
+        armControl.setPosition(1);
+        waitForArm();
+        slideControl.setTargetPosition(0);
+        waitForSlide();
+    }
+
+    public void armIn(){
+        slideControl.setTargetPosition(-1820);
+        waitForSlide();
+        slideControl.setServoPosition(-10);
+        delay(250);
+        armControl.setPosition(0);
+        waitForArm();
+        slideControl.setServoPosition(65);
+        delay(250);
+        slideControl.setTargetPosition(0);
+        waitForSlide();
+    }
+
+    public void waitForArm(){
+        currentArmPosition = armControl.getArmPosition();
+        targetArmPosition = armControl.getArmTargetPosition();
+        while (currentArmPosition - targetArmPosition > 2){
+            slideControl.update();
+        }
+
     }
 
     public void waitForSlide(){
