@@ -65,6 +65,8 @@ public class FCDPID extends LinearOpMode {
                 halfSpeed = !halfSpeed;
             }
             lastButtonState = currentButtonState;
+            LLResult result = limelight.getLatestResult();
+            Pose3D botpose = result.getBotpose();
 
             double y = gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x * 1.1;
@@ -187,10 +189,7 @@ public class FCDPID extends LinearOpMode {
             telemetry.addData("", emptyVariable);
             telemetry.addData("Heading", botHeading);
             telemetry.update();
-            LLResult result = limelight.getLatestResult();
-            if (result != null) {
-                if (result.isValid()) {
-                    Pose3D botpose = result.getBotpose();
+            if (result.isValid()) {
                     telemetry.addData("tx", result.getTx());
                     telemetry.addData("ty", result.getTy());
                     telemetry.addData("Botpose", botpose.toString());
@@ -199,4 +198,3 @@ public class FCDPID extends LinearOpMode {
             }
         }
     }
-}
