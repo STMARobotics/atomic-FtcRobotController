@@ -22,4 +22,3 @@ Our code is designed to control our robot for various tasks and challenges in th
 
 - **Autonomous Mode**: Work in progress, will use limelight combined with an omnidirectional intake to hopefully score a 32 point auto.
 - **TeleOp Mode**: Manual control for drivers to operate the robot, still work in progress.
-- **Custom Algorithms**: Advanced algorithms for navigation, object detection, and more (limelight).
