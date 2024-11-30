@@ -70,47 +70,57 @@ public class FCDPID extends LinearOpMode {
             }
             lastButtonState = currentButtonState;
             LLResult result = limelight.getLatestResult();
+            if (result != null) {
+                if (result.isValid()) {
+                    Pose3D botpose = result.getBotpose();
+                    telemetry.addData("tx", result.getTx());
+                    telemetry.addData("ty", result.getTy());
+                    telemetry.addData("Botpose", botpose.toString());
+                } else {
+                    telemetry.addData("Limelight", "No valid result");
+                }
 
-            double y = gamepad1.left_stick_y;
-            double x = gamepad1.left_stick_x * 1.1;
-            double rx = gamepad1.right_stick_x; // Rotation input
-            double iF = gamepad2.right_trigger * -0.45;
-            double iR = gamepad2.left_trigger * 0.45;
 
-            if (halfSpeed) {
-                y *= 0.3;
-                x *= 0.3;
-            }
+                    double y = gamepad1.left_stick_y;
+                    double x = gamepad1.left_stick_x * 1.1;
+                    double rx = gamepad1.right_stick_x; // Rotation input
+                    double iF = gamepad2.right_trigger * -0.45;
+                    double iR = gamepad2.left_trigger * 0.45;
 
-            if (gamepad1.y) {
-                fieldOffset = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
-            }
+                    if (halfSpeed) {
+                        y *= 0.3;
+                        x *= 0.3;
+                    }
 
-            double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) - fieldOffset;
-            double headingRad = Math.toRadians(botHeading);
-            {
-                // Reverse left/right controls
-                double temp = y * Math.cos(headingRad) + x * Math.sin(headingRad);
-                x = -y * Math.sin(headingRad) + x * Math.cos(headingRad);
-                y = temp;
-            }
+                    if (gamepad1.y) {
+                        fieldOffset = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+                    }
 
-            // Set a constant turning speed
-            double turningSpeed = 0.3;
-            if (Math.abs(rx) > 0.1) { // Only apply turning when there is input
-                rx = turningSpeed * Math.signum(rx);
-            } else {
-                rx = 0;
-            }
+                    double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) - fieldOffset;
+                    double headingRad = Math.toRadians(botHeading);
+                    {
+                        // Reverse left/right controls
+                        double temp = y * Math.cos(headingRad) + x * Math.sin(headingRad);
+                        x = -y * Math.sin(headingRad) + x * Math.cos(headingRad);
+                        y = temp;
+                    }
 
-            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-            double frontRightPower = (y + x + rx) / denominator;
-            double rearRightPower = (y - x + rx) / denominator;
-            double rearLeftPower = (y + x - rx) / denominator;
-            double frontLeftPower = (y - x - rx) / denominator;
-            double intakePower = (iF + iR);
+                    // Set a constant turning speed
+                    double turningSpeed = 0.3;
+                    if (Math.abs(rx) > 0.1) { // Only apply turning when there is input
+                        rx = turningSpeed * Math.signum(rx);
+                    } else {
+                        rx = 0;
+                    }
 
-            //beyblade protocol
+                    double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+                    double frontRightPower = (y + x + rx) / denominator;
+                    double rearRightPower = (y - x + rx) / denominator;
+                    double rearLeftPower = (y + x - rx) / denominator;
+                    double frontLeftPower = (y - x - rx) / denominator;
+                    double intakePower = (iF + iR);
+
+                    //beyblade protocol
 //            if (gamepad1.right_bumper && gamepad1.left_bumper && gamepad2.right_bumper && gamepad2.left_bumper){
 //                frontRightPower = 999;
 //                rearRightPower = 999;
@@ -124,82 +134,76 @@ public class FCDPID extends LinearOpMode {
 //                frontLeftPower = 0;
 //            }
 
-            frontRight.setPower(frontRightPower);
-            rearRight.setPower(rearRightPower);
-            rearLeft.setPower(rearLeftPower);
-            frontLeft.setPower(frontLeftPower);
-            intake.setPower(intakePower);
+                    frontRight.setPower(frontRightPower);
+                    rearRight.setPower(rearRightPower);
+                    rearLeft.setPower(rearLeftPower);
+                    frontLeft.setPower(frontLeftPower);
+                    intake.setPower(intakePower);
 
-            double currentSlidePosition = slideControl.getCurrentPosition();
-            if (gamepad2.left_stick_y > 0.1 || gamepad2.left_stick_y < -0.1) {
-                targetSlidePosition += gamepad2.left_stick_y * 30;
-            }
+                    double currentSlidePosition = slideControl.getCurrentPosition();
+                    if (gamepad2.left_stick_y > 0.1 || gamepad2.left_stick_y < -0.1) {
+                        targetSlidePosition += gamepad2.left_stick_y * 30;
+                    }
 
-            if (gamepad2.right_stick_y > 0.1 || gamepad2.right_stick_y < -0.1) {
-                targetArmPosition += gamepad2.right_stick_y * 30;
-            }
+                    if (gamepad2.right_stick_y > 0.1 || gamepad2.right_stick_y < -0.1) {
+                        targetArmPosition += gamepad2.right_stick_y * 30;
+                    }
 
-            if (gamepad2.dpad_up) {
-                targetServoPosition = -10;
-            }
+                    if (gamepad2.dpad_up) {
+                        targetServoPosition = -10;
+                    }
 
-            if (gamepad2.dpad_right) {
-                targetServoPosition = 65;
-            }
+                    if (gamepad2.dpad_right) {
+                        targetServoPosition = 65;
+                    }
 
-            if (gamepad2.dpad_down) {
-                targetServoPosition = -80;
-            }
+                    if (gamepad2.dpad_down) {
+                        targetServoPosition = -80;
+                    }
 
-            if (gamepad2.y) {
-                targetSlidePosition = -3550;
-            }
+                    if (gamepad2.y) {
+                        targetSlidePosition = -3550;
+                    }
 
-            if (gamepad2.a) {
-                targetSlidePosition = -5;
-            }
+                    if (gamepad2.a) {
+                        targetSlidePosition = -5;
+                    }
 
-            if (gamepad2.b) {
-                targetSlidePosition = -1820;
-            }
+                    if (gamepad2.b) {
+                        targetSlidePosition = -1820;
+                    }
 
-            if (targetSlidePosition > 10) {
-                targetSlidePosition = 0;
-            }
+                    if (targetSlidePosition > 10) {
+                        targetSlidePosition = 0;
+                    }
 
-            if (targetSlidePosition < -3800) {
-                targetSlidePosition = -3800;
-            }
+                    if (targetSlidePosition < -3800) {
+                        targetSlidePosition = -3800;
+                    }
 
-            slideControl.setTargetPosition(targetSlidePosition);
-            slideControl.setServoPosition(targetServoPosition);
-            armControl.setPosition(targetArmPosition);
-            armControl.update();
-            slideControl.update();
+                    slideControl.setTargetPosition(targetSlidePosition);
+                    slideControl.setServoPosition(targetServoPosition);
+                    armControl.setPosition(targetArmPosition);
+                    armControl.update();
+                    slideControl.update();
 
 
-            String emptyVariable = " ";
+                    String emptyVariable = " ";
 
-            telemetry.addData("Half-Speed Mode", halfSpeed ? "ON" : "OFF");
-            telemetry.addData("", emptyVariable);
-            telemetry.addData("Arm Target Position", armControl.getArmTargetPosition());
-            telemetry.addData("Arm Position", armControl.getArmPosition());
-            telemetry.addData("Arm Power", armControl.getArmPower());
-            telemetry.addData("", emptyVariable);
-            telemetry.addData("Slide Target Position", slideControl.getTargetPosition());
-            telemetry.addData("Slide Position", slideControl.getCurrentPosition());
-            telemetry.addData("Servo Position", targetServoPosition);
-            telemetry.addData("", emptyVariable);
-            telemetry.addData("Heading", botHeading);
-            telemetry.update();
-            if (result != null && result.isValid()) {
-                Pose3D botpose = result.getBotpose();
-                telemetry.addData("tx", result.getTx());
-                telemetry.addData("ty", result.getTy());
-                telemetry.addData("Botpose", botpose.toString());
-            } else {
-                telemetry.addData("Limelight", "No valid result");
+                    telemetry.addData("Half-Speed Mode", halfSpeed ? "ON" : "OFF");
+                    telemetry.addData("", emptyVariable);
+                    telemetry.addData("Arm Target Position", armControl.getArmTargetPosition());
+                    telemetry.addData("Arm Position", armControl.getArmPosition());
+                    telemetry.addData("Arm Power", armControl.getArmPower());
+                    telemetry.addData("", emptyVariable);
+                    telemetry.addData("Slide Target Position", slideControl.getTargetPosition());
+                    telemetry.addData("Slide Position", slideControl.getCurrentPosition());
+                    telemetry.addData("Servo Position", targetServoPosition);
+                    telemetry.addData("", emptyVariable);
+                    telemetry.addData("Heading", botHeading);
+                    telemetry.update();
+
+                }
             }
         }
     }
-}
