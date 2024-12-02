@@ -214,6 +214,7 @@ public class FCDPID extends LinearOpMode {
                     telemetry.addData("Servo Position", targetServoPosition);
                     telemetry.addData("", emptyVariable);
                     telemetry.addData("Heading", botHeading);
+                    telemetry.addData("", emptyVariable);
                     telemetry.addData("Is At Position?", limelightSubSystem.isAtPosition());
                     telemetry.update();
                 }
