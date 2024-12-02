@@ -24,7 +24,7 @@ public class LimelightSubSystem {
     private final double integralLimit = 0.1;
     private IMU imu;
 
-    public LimelightSubSystem(Limelight3A limelight, DcMotor frontRight, DcMotor rearRight, DcMotor rearLeft, DcMotor frontLeft) {
+    public LimelightSubSystem(Limelight3A limelight, IMU imu, DcMotor frontRight, DcMotor rearRight, DcMotor rearLeft, DcMotor frontLeft) {
         this.limelight = limelight;
         this.imu = imu;
         this.frontRight = frontRight;
@@ -64,6 +64,14 @@ public class LimelightSubSystem {
 
     public double getErrorY() {
         return targetPositionY - actualPositionY;
+    }
+
+    public boolean isAtPosition() {
+        if (getErrorX() < 0.75 && getErrorY() < 0.5){
+            return true;
+        }else {
+            return false;
+        }
     }
 
     public void goToPosition(double targetX, double targetY, double targetHeading) {

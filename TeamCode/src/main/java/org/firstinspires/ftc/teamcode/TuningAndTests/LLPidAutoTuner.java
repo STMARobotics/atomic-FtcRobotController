@@ -2,9 +2,11 @@ package org.firstinspires.ftc.teamcode.TuningAndTests;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.teamcode.SubSystems.LimelightSubSystem;
 
@@ -27,10 +29,16 @@ public class LLPidAutoTuner extends LinearOpMode {
         rearRight = hardwareMap.get(DcMotorEx.class, "rearRight");
         rearLeft = hardwareMap.get(DcMotorEx.class, "rearLeft");
         frontLeft = hardwareMap.get(DcMotorEx.class, "frontLeft");
+        IMU imu = hardwareMap.get(IMU.class, "imu");
+
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
+        imu.initialize(parameters);
 
         limelightSubSystem = new LimelightSubSystem(
                 hardwareMap.get(Limelight3A.class, "limelight"),
-                frontRight, rearRight, rearLeft, frontLeft
+                imu, frontRight, rearRight, rearLeft, frontLeft
         );
 
         telemetry.addLine("Ready for Automatic Movement PID Tuning");

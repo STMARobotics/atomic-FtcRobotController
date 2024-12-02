@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.MainTeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -15,6 +16,7 @@ import com.qualcomm.hardware.limelightvision.Limelight3A;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.SubSystems.ArmControl;
+import org.firstinspires.ftc.teamcode.SubSystems.LimelightSubSystem;
 import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
 
 @TeleOp
@@ -29,6 +31,8 @@ public class FCDPID extends LinearOpMode {
     double targetServoPosition = 65;
     private Limelight3A limelight;
     private DcMotor frontRight, rearRight, rearLeft, frontLeft;
+    private IMU imu;
+
 
 
     @Override
@@ -37,11 +41,12 @@ public class FCDPID extends LinearOpMode {
         final DcMotor rearRight = hardwareMap.dcMotor.get("rearRight");
         final DcMotor rearLeft = hardwareMap.dcMotor.get("rearLeft");
         final DcMotor frontLeft = hardwareMap.dcMotor.get("frontLeft");
-        final DcMotorEx intake = (DcMotorEx) hardwareMap.dcMotor.get("intake");
+        final CRServo intake = hardwareMap.get(CRServo.class, "intake");
         final DcMotorEx slideMotor = hardwareMap.get(DcMotorEx.class, "slide");
         final Servo slideServo = hardwareMap.get(Servo.class, "servo");
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
         slideControl = new SlideControl(slideMotor, slideServo);
+        LimelightSubSystem limelightSubSystem = new LimelightSubSystem(limelight, imu, frontRight, rearRight, rearLeft, frontLeft);
 
         limelight.pipelineSwitch(0);
         telemetry.setMsTransmissionInterval(11);
@@ -58,6 +63,7 @@ public class FCDPID extends LinearOpMode {
 
         armControl = new ArmControl(hardwareMap);
         armControl.resetZero();
+
         waitForStart();
         if (isStopRequested()) return;
 
@@ -99,15 +105,13 @@ public class FCDPID extends LinearOpMode {
                     double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) - fieldOffset;
                     double headingRad = Math.toRadians(botHeading);
                     {
-                        // Reverse left/right controls
                         double temp = y * Math.cos(headingRad) + x * Math.sin(headingRad);
                         x = -y * Math.sin(headingRad) + x * Math.cos(headingRad);
                         y = temp;
                     }
 
-                    // Set a constant turning speed
                     double turningSpeed = 0.3;
-                    if (Math.abs(rx) > 0.1) { // Only apply turning when there is input
+                    if (Math.abs(rx) > 0.1) {
                         rx = turningSpeed * Math.signum(rx);
                     } else {
                         rx = 0;
@@ -119,6 +123,7 @@ public class FCDPID extends LinearOpMode {
                     double rearLeftPower = (y + x - rx) / denominator;
                     double frontLeftPower = (y - x - rx) / denominator;
                     double intakePower = (iF + iR);
+
 
                     //beyblade protocol
 //            if (gamepad1.right_bumper && gamepad1.left_bumper && gamepad2.right_bumper && gamepad2.left_bumper){
@@ -173,6 +178,14 @@ public class FCDPID extends LinearOpMode {
                         targetSlidePosition = -1820;
                     }
 
+                    if (gamepad2.x) {
+                        limelightSubSystem.goToPosition(3,3,45);
+                    }
+
+                    if (gamepad2.b) {
+                        limelightSubSystem.goToPosition(1,1,0);
+                    }
+
                     if (targetSlidePosition > 10) {
                         targetSlidePosition = 0;
                     }
@@ -201,8 +214,8 @@ public class FCDPID extends LinearOpMode {
                     telemetry.addData("Servo Position", targetServoPosition);
                     telemetry.addData("", emptyVariable);
                     telemetry.addData("Heading", botHeading);
+                    telemetry.addData("Is At Position?", limelightSubSystem.isAtPosition());
                     telemetry.update();
-
                 }
             }
         }
