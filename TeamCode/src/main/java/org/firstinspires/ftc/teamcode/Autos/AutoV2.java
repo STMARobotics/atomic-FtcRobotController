@@ -27,57 +27,45 @@ public class AutoV2 extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        // Initialize hardware
         DcMotor frontRight = hardwareMap.dcMotor.get("frontRight");
         DcMotor rearRight = hardwareMap.dcMotor.get("rearRight");
         DcMotor rearLeft = hardwareMap.dcMotor.get("rearLeft");
         DcMotor frontLeft = hardwareMap.dcMotor.get("frontLeft");
         DcMotorEx slideMotor = hardwareMap.get(DcMotorEx.class, "slide");
         Servo slideServo = hardwareMap.get(Servo.class, "servo");
-//        rearRight.isBusy();
 
-        // Initialize subsystems
         armControl = new ArmControl(hardwareMap);
         slideControl = new SlideControl(slideMotor, slideServo);
 
         slideControl.resetEncoder();
         armControl.resetZero();
 
-        // Reverse motor directions
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         rearRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        // Initialize IMU
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
         imu.initialize(parameters);
 
-        // Wait for start
         telemetry.addData("Status", "Initialized. Waiting for start...");
         telemetry.update();
         waitForStart();
         if (isStopRequested()) return;
 
-        // Record the initial heading
         fieldOffset = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
 
-        //set servo to home
         slideControl.setServoPosition(65);
 
-        // Autonomous sequence
-        // Move forward
+        // Autonomous stuff
         moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, -0.3, 1600);
 
-        // Rotate to -45 degrees
         rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, -45);
 
-        // Go back
         moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, 0.3, 1450);
         stopDrivetrain(frontLeft, rearLeft, rearRight, frontRight);
 
-//        // Move to high basket
 //        targetSlidePosition = -3550;
 //        slideControl.setTargetPosition(targetSlidePosition);
 //        waitForSlideToReachTarget(slideControl, targetSlidePosition);
@@ -103,10 +91,8 @@ public class AutoV2 extends LinearOpMode {
 
         rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, 0);
 
-        // Stop all motors
         stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
 
-        // Telemetry to indicate completion
         telemetry.addData("Autonomous", "Complete");
         telemetry.update();
         slideControl.update();
@@ -135,26 +121,22 @@ public class AutoV2 extends LinearOpMode {
         while (opModeIsActive()) {
             currentAngle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) - fieldOffset;
 
-            // Calculate angle difference (normalized to [-180, 180])
             error = targetAngle - currentAngle;
-            error = ((error + 180) % 360 + 360) % 360 - 180; // Normalize to [-180, 180]
+            error = ((error + 180) % 360 + 360) % 360 - 180;
 
-            if (Math.abs(error) <= 2) { // Stop when within tolerance of 5 degrees
+            if (Math.abs(error) <= 2) {
                 break;
             }
 
-            // Gradual slowdown: Adjust turn power based on error magnitude
-            turnPower = 0.65 * (Math.abs(error) / 45.0); // Scale power (0.3 at 45° error, lower as it approaches target)
-            turnPower = Math.max(0.1, turnPower); // Ensure a minimum power to overcome inertia
+            turnPower = 0.65 * (Math.abs(error) / 45.0);
+            turnPower = Math.max(0.1, turnPower);
 
             if (error > 0) {
-                // Rotate clockwise
                 frontLeft.setPower(turnPower);
                 rearLeft.setPower(turnPower);
                 frontRight.setPower(-turnPower);
                 rearRight.setPower(-turnPower);
             } else {
-                // Rotate counter-clockwise
                 frontLeft.setPower(-turnPower);
                 rearLeft.setPower(-turnPower);
                 frontRight.setPower(turnPower);
@@ -167,7 +149,6 @@ public class AutoV2 extends LinearOpMode {
             telemetry.update();
         }
 
-        // Stop all motors once target is reached
         stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
     }
 
@@ -178,7 +159,7 @@ public class AutoV2 extends LinearOpMode {
             telemetry.addData("Target Slide Position", targetPosition);
             telemetry.addData("Slide Error", Math.abs(slideControl.getCurrentPosition() - targetPosition));
             telemetry.update();
-            sleep(50); // Small delay to avoid overloading the system
+            sleep(50);
         }
     }
 }

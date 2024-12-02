@@ -78,13 +78,12 @@ public class FCDPID extends LinearOpMode {
                     telemetry.addData("Bot Position", String.format("X: %.2f, Y: %.2f", x, y));
                 }
             } else {
-                // Use a clear and concise message
                 telemetry.addData("Limelight Status", "No valid target detected");
             }
 
                     double y = gamepad1.left_stick_y;
                     double x = gamepad1.left_stick_x * 1.1;
-                    double rx = gamepad1.right_stick_x; // Rotation input
+                    double rx = gamepad1.right_stick_x;
                     double iF = gamepad2.right_trigger * -0.45;
                     double iR = gamepad2.left_trigger * 0.45;
 
