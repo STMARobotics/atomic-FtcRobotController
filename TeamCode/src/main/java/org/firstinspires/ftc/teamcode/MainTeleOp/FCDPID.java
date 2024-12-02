@@ -70,16 +70,17 @@ public class FCDPID extends LinearOpMode {
             }
             lastButtonState = currentButtonState;
             LLResult result = limelight.getLatestResult();
-            if (result != null) {
-                if (result.isValid()) {
-                    Pose3D botpose = result.getBotpose();
-                    telemetry.addData("tx", result.getTx());
-                    telemetry.addData("ty", result.getTy());
-                    telemetry.addData("Botpose", botpose.toString());
-                } else {
-                    telemetry.addData("Limelight", "No valid result");
+            if (result != null && result.isValid()) {
+                Pose3D botpose = result.getBotpose();
+                if (botpose != null) {
+                    double x = botpose.getPosition().x;
+                    double y = botpose.getPosition().y;
+                    telemetry.addData("Bot Position", String.format("X: %.2f, Y: %.2f", x, y));
                 }
-
+            } else {
+                // Use a clear and concise message
+                telemetry.addData("Limelight Status", "No valid target detected");
+            }
 
                     double y = gamepad1.left_stick_y;
                     double x = gamepad1.left_stick_x * 1.1;
@@ -206,4 +207,3 @@ public class FCDPID extends LinearOpMode {
                 }
             }
         }
-    }
