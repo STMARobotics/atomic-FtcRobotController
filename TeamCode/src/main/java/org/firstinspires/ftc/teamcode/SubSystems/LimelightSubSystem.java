@@ -66,15 +66,105 @@ public class LimelightSubSystem {
         return targetPositionY - actualPositionY;
     }
 
-    public boolean isAtPosition() {
-        if (getErrorX() < 0.75 && getErrorY() < 0.5){
-            return true;
-        }else {
-            return false;
+//old code i think doesnt work
+//    public void goToPosition(double targetX, double targetY, double targetHeading) {
+//        while (!isAtPosition()) {
+//            LLResult result = limelight.getLatestResult();
+//            if (result != null && result.isValid()) {
+//                Pose3D botpose = result.getBotpose();
+//                if (botpose != null) {
+//                    double actualX = botpose.getPosition().x;
+//                    double actualY = botpose.getPosition().y;
+//                    double actualHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+//
+//                    double errorX = targetX - actualX;
+//                    double errorY = targetY - actualY;
+//                    double headingError = targetHeading - actualHeading;
+//                    headingError = AngleUnit.normalizeDegrees(headingError);
+//
+//                    integralX += errorX;
+//                    integralY += errorY;
+//                    double powerX = kP * errorX + kI * integralX + kD * (errorX - previousErrorX);
+//                    double powerY = kP * errorY + kI * integralY + kD * (errorY - previousErrorY);
+//
+//                    integralHeading += headingError;
+//                    double turnPower = headingKP * headingError + kI * integralHeading + kD * (headingError - previousHeadingError);
+//
+//                    double fieldHeading = Math.toRadians(actualHeading);
+//                    double tempX = powerX * Math.cos(fieldHeading) - powerY * Math.sin(fieldHeading);
+//                    double tempY = powerX * Math.sin(fieldHeading) + powerY * Math.cos(fieldHeading);
+//
+//                    double frontRightPower = tempY - tempX - turnPower;
+//                    double rearRightPower = tempY + tempX - turnPower;
+//                    double rearLeftPower = tempY - tempX + turnPower;
+//                    double frontLeftPower = tempY + tempX + turnPower;
+//
+//                    frontRight.setPower(frontRightPower);
+//                    rearRight.setPower(rearRightPower);
+//                    rearLeft.setPower(rearLeftPower);
+//                    frontLeft.setPower(frontLeftPower);
+//
+//                    previousErrorX = errorX;
+//                    previousErrorY = errorY;
+//                    previousHeadingError = headingError;
+//                }
+//            }
+//        }
+//    }
+
+    //new code might work?
+    public void goToPosition(double targetX, double targetY, double targetHeading) {
+        double tolerance = 0.5;
+        while (!isAtPosition(targetX, targetY, targetHeading, tolerance)) {
+            LLResult result = limelight.getLatestResult();
+            if (result != null && result.isValid()) {
+                Pose3D botpose = result.getBotpose();
+                if (botpose != null) {
+                    double actualX = botpose.getPosition().x;
+                    double actualY = botpose.getPosition().y;
+                    double actualHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+
+                    double errorX = targetX - actualX;
+                    double errorY = targetY - actualY;
+                    double headingError = targetHeading - actualHeading;
+                    headingError = AngleUnit.normalizeDegrees(headingError);
+
+                    integralX += errorX;
+                    integralY += errorY;
+                    double powerX = kP * errorX + kI * integralX + kD * (errorX - previousErrorX);
+                    double powerY = kP * errorY + kI * integralY + kD * (errorY - previousErrorY);
+
+                    integralHeading += headingError;
+                    double turnPower = headingKP * headingError + kI * integralHeading + kD * (headingError - previousHeadingError);
+
+                    double fieldHeading = Math.toRadians(actualHeading);
+                    double tempX = powerX * Math.cos(fieldHeading) - powerY * Math.sin(fieldHeading);
+                    double tempY = powerX * Math.sin(fieldHeading) + powerY * Math.cos(fieldHeading);
+
+                    double frontRightPower = tempY - tempX - turnPower;
+                    double rearRightPower = tempY + tempX - turnPower;
+                    double rearLeftPower = tempY - tempX + turnPower;
+                    double frontLeftPower = tempY + tempX + turnPower;
+
+                    frontRightPower = Math.max(-1, Math.min(1, frontRightPower));
+                    rearRightPower = Math.max(-1, Math.min(1, rearRightPower));
+                    rearLeftPower = Math.max(-1, Math.min(1, rearLeftPower));
+                    frontLeftPower = Math.max(-1, Math.min(1, frontLeftPower));
+
+                    frontRight.setPower(frontRightPower);
+                    rearRight.setPower(rearRightPower);
+                    rearLeft.setPower(rearLeftPower);
+                    frontLeft.setPower(frontLeftPower);
+
+                    previousErrorX = errorX;
+                    previousErrorY = errorY;
+                    previousHeadingError = headingError;
+                }
+            }
         }
     }
 
-    public void goToPosition(double targetX, double targetY, double targetHeading) {
+    private boolean isAtPosition(double targetX, double targetY, double targetHeading, double tolerance) {
         LLResult result = limelight.getLatestResult();
         if (result != null && result.isValid()) {
             Pose3D botpose = result.getBotpose();
@@ -82,38 +172,19 @@ public class LimelightSubSystem {
                 double actualX = botpose.getPosition().x;
                 double actualY = botpose.getPosition().y;
                 double actualHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
-
-                double errorX = targetX - actualX;
-                double errorY = targetY - actualY;
-                double headingError = targetHeading - actualHeading;
-                headingError = AngleUnit.normalizeDegrees(headingError);
-
-                integralX += errorX;
-                integralY += errorY;
-                double powerX = kP * errorX + kI * integralX + kD * (errorX - previousErrorX);
-                double powerY = kP * errorY + kI * integralY + kD * (errorY - previousErrorY);
-
-                integralHeading += headingError;
-                double turnPower = headingKP * headingError + kI * integralHeading + kD * (headingError - previousHeadingError);
-
-                double fieldHeading = Math.toRadians(actualHeading);
-                double tempX = powerX * Math.cos(fieldHeading) - powerY * Math.sin(fieldHeading);
-                double tempY = powerX * Math.sin(fieldHeading) + powerY * Math.cos(fieldHeading);
-
-                double frontRightPower = tempY - tempX - turnPower;
-                double rearRightPower = tempY + tempX - turnPower;
-                double rearLeftPower = tempY - tempX + turnPower;
-                double frontLeftPower = tempY + tempX + turnPower;
-
-                frontRight.setPower(frontRightPower);
-                rearRight.setPower(rearRightPower);
-                rearLeft.setPower(rearLeftPower);
-                frontLeft.setPower(frontLeftPower);
-
-                previousErrorX = errorX;
-                previousErrorY = errorY;
-                previousHeadingError = headingError;
+                double positionError = Math.hypot(targetX - actualX, targetY - actualY);
+                double headingError = AngleUnit.normalizeDegrees(targetHeading - actualHeading);
+                return positionError < tolerance && Math.abs(headingError) < tolerance;
             }
+        }
+        return false;
+    }
+
+    public boolean isAtPositionPublic() {
+        if (getErrorX() < 0.05 && getErrorY() < 0.05){
+            return true;
+        }else {
+            return false;
         }
     }
 
