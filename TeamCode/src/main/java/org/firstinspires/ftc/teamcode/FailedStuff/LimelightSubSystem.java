@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.SubSystems;
+package org.firstinspires.ftc.teamcode.FailedStuff;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -65,52 +65,6 @@ public class LimelightSubSystem {
     public double getErrorY() {
         return targetPositionY - actualPositionY;
     }
-
-//old code i think doesnt work
-//    public void goToPosition(double targetX, double targetY, double targetHeading) {
-//        while (!isAtPosition()) {
-//            LLResult result = limelight.getLatestResult();
-//            if (result != null && result.isValid()) {
-//                Pose3D botpose = result.getBotpose();
-//                if (botpose != null) {
-//                    double actualX = botpose.getPosition().x;
-//                    double actualY = botpose.getPosition().y;
-//                    double actualHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
-//
-//                    double errorX = targetX - actualX;
-//                    double errorY = targetY - actualY;
-//                    double headingError = targetHeading - actualHeading;
-//                    headingError = AngleUnit.normalizeDegrees(headingError);
-//
-//                    integralX += errorX;
-//                    integralY += errorY;
-//                    double powerX = kP * errorX + kI * integralX + kD * (errorX - previousErrorX);
-//                    double powerY = kP * errorY + kI * integralY + kD * (errorY - previousErrorY);
-//
-//                    integralHeading += headingError;
-//                    double turnPower = headingKP * headingError + kI * integralHeading + kD * (headingError - previousHeadingError);
-//
-//                    double fieldHeading = Math.toRadians(actualHeading);
-//                    double tempX = powerX * Math.cos(fieldHeading) - powerY * Math.sin(fieldHeading);
-//                    double tempY = powerX * Math.sin(fieldHeading) + powerY * Math.cos(fieldHeading);
-//
-//                    double frontRightPower = tempY - tempX - turnPower;
-//                    double rearRightPower = tempY + tempX - turnPower;
-//                    double rearLeftPower = tempY - tempX + turnPower;
-//                    double frontLeftPower = tempY + tempX + turnPower;
-//
-//                    frontRight.setPower(frontRightPower);
-//                    rearRight.setPower(rearRightPower);
-//                    rearLeft.setPower(rearLeftPower);
-//                    frontLeft.setPower(frontLeftPower);
-//
-//                    previousErrorX = errorX;
-//                    previousErrorY = errorY;
-//                    previousHeadingError = headingError;
-//                }
-//            }
-//        }
-//    }
 
     //new code might work?
     public void goToPosition(double targetX, double targetY, double targetHeading) {

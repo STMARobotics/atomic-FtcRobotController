@@ -9,14 +9,13 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.SubSystems.ArmControl;
-import org.firstinspires.ftc.teamcode.SubSystems.LimelightSubSystem;
+import org.firstinspires.ftc.teamcode.FailedStuff.LimelightSubSystem;
 import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
 
 @TeleOp
@@ -186,12 +185,16 @@ public class FCDPID extends LinearOpMode {
                         limelightSubSystem.goToPosition(1,1,0);
                     }
 
-                    if (targetSlidePosition > 10) {
+                    if (targetSlidePosition > 0) {
                         targetSlidePosition = 0;
                     }
 
                     if (targetSlidePosition < -3800) {
                         targetSlidePosition = -3800;
+                    }
+
+                    if (currentSlidePosition > -5 || targetSlidePosition > -5){
+                        slideControl.setSlidePower(0);
                     }
 
                     slideControl.setTargetPosition(targetSlidePosition);

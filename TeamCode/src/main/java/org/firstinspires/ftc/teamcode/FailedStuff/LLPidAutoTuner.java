@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.TuningAndTests;
+package org.firstinspires.ftc.teamcode.FailedStuff;
 
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -7,8 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
-
-import org.firstinspires.ftc.teamcode.SubSystems.LimelightSubSystem;
 
 @TeleOp(name = "Automatic LimeLight PID Tuning", group = "Tuning")
 public class LLPidAutoTuner extends LinearOpMode {

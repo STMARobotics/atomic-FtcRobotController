@@ -54,6 +54,10 @@ public class SlideControl {
         return targetPosition;
     }
 
+    public void setSlidePower(double power) {
+        slide.setPower(power);
+    }
+
     public void setServoPosition(double position) {
         position = Math.max(-90, Math.min(90, position));
 
