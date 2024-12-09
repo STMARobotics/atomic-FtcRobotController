@@ -28,7 +28,6 @@ public class FCDPID extends LinearOpMode {
     double targetSlidePosition;
     private double targetArmPosition = 0;
     double targetServoPosition = 65;
-    private Limelight3A limelight;
     private DcMotor frontRight, rearRight, rearLeft, frontLeft;
     private IMU imu;
 
@@ -69,22 +68,13 @@ public class FCDPID extends LinearOpMode {
         slideControl.resetEncoder();
 
         while (opModeIsActive()) {
+
             boolean currentButtonState = gamepad1.right_stick_button;
             if (currentButtonState && !lastButtonState) {
                 halfSpeed = !halfSpeed;
             }
+
             lastButtonState = currentButtonState;
-            LLResult result = limelight.getLatestResult();
-            if (result != null && result.isValid()) {
-                Pose3D botpose = result.getBotpose();
-                if (botpose != null) {
-                    double x = botpose.getPosition().x;
-                    double y = botpose.getPosition().y;
-                    telemetry.addData("Bot Position", String.format("X: %.2f, Y: %.2f", x, y));
-                }
-            } else {
-                telemetry.addData("Limelight Status", "No valid target detected");
-            }
 
                     double y = gamepad1.left_stick_y;
                     double x = gamepad1.left_stick_x * 1.1;
@@ -103,6 +93,7 @@ public class FCDPID extends LinearOpMode {
 
                     double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) - fieldOffset;
                     double headingRad = Math.toRadians(botHeading);
+
                     {
                         double temp = y * Math.cos(headingRad) + x * Math.sin(headingRad);
                         x = -y * Math.sin(headingRad) + x * Math.cos(headingRad);
@@ -110,6 +101,7 @@ public class FCDPID extends LinearOpMode {
                     }
 
                     double turningSpeed = 0.3;
+
                     if (Math.abs(rx) > 0.1) {
                         rx = turningSpeed * Math.signum(rx);
                     } else {
@@ -138,11 +130,6 @@ public class FCDPID extends LinearOpMode {
 //                frontLeftPower = 0;
 //            }
 
-                    frontRight.setPower(frontRightPower);
-                    rearRight.setPower(rearRightPower);
-                    rearLeft.setPower(rearLeftPower);
-                    frontLeft.setPower(frontLeftPower);
-                    intake.setPower(intakePower);
 
                     double currentSlidePosition = slideControl.getCurrentPosition();
                     if (gamepad2.left_stick_y > 0.1 || gamepad2.left_stick_y < -0.1) {
@@ -153,36 +140,67 @@ public class FCDPID extends LinearOpMode {
                         targetArmPosition += gamepad2.right_stick_y * 30;
                     }
 
-                    if (gamepad2.dpad_up) {
-                        targetServoPosition = -10;
-                    }
 
-                    if (gamepad2.dpad_right) {
-                        targetServoPosition = 65;
-                    }
+                    //old code
+                    // if (gamepad2.dpad_up) {
+                    //     targetServoPosition = -10;
+                    // }
 
-                    if (gamepad2.dpad_down) {
-                        targetServoPosition = -80;
-                    }
+                    // if (gamepad2.dpad_right) {
+                    //     targetServoPosition = 65;
+                    // }
 
-                    if (gamepad2.y) {
-                        targetSlidePosition = -3550;
-                    }
+                    // if (gamepad2.dpad_down) {
+                    //     targetServoPosition = -80;
+                    // }
 
+                    // if (gamepad2.y) {
+                    //     targetSlidePosition = -3550;
+                    // }
+
+                    // if (gamepad2.a) {
+                    //     targetSlidePosition = -5;
+                    // }
+
+                    // if (gamepad2.b) {
+                    //     targetSlidePosition = -1820;
+                    // }
+
+                    // if (gamepad2.x) {
+                    //     limelightSubSystem.goToPosition(3,3,45);
+                    // }
+
+                    // if (gamepad2.b) {
+                    //     limelightSubSystem.goToPosition(1,1,0);
+                    // }
+
+                    //experimental code
                     if (gamepad2.a) {
-                        targetSlidePosition = -5;
+                        AutoSubsystem.pickup();
                     }
 
                     if (gamepad2.b) {
-                        targetSlidePosition = -1820;
+                        AutoSubsystem.specimenPickup();
                     }
 
                     if (gamepad2.x) {
-                        limelightSubSystem.goToPosition(3,3,45);
+                        AutoSubsystem.specimenDropoff();
                     }
 
-                    if (gamepad2.b) {
-                        limelightSubSystem.goToPosition(1,1,0);
+                    if (gamepad2.y) {
+                        AutoSubsystem.loadSampleBucket();
+                    }
+
+                    if (gamepad2.dpad_up) {
+                        AutoSubsystem.dumpSampleHigh();
+                    }
+
+                    if (gamepad2.dpad_down) {
+                        AutoSubsystem.servoDropSample();
+                    }
+
+                    if (gamepad2.dpad_right) {
+                        slideControl.setTargetPosition(-1820);
                     }
 
                     if (targetSlidePosition > 0) {
@@ -197,12 +215,18 @@ public class FCDPID extends LinearOpMode {
                         slideControl.setSlidePower(0);
                     }
 
+
+                    frontRight.setPower(frontRightPower);
+                    rearRight.setPower(rearRightPower);
+                    rearLeft.setPower(rearLeftPower);
+                    frontLeft.setPower(frontLeftPower);
+                    intake.setPower(intakePower);
+
                     slideControl.setTargetPosition(targetSlidePosition);
                     slideControl.setServoPosition(targetServoPosition);
                     armControl.setPosition(targetArmPosition);
                     armControl.update();
                     slideControl.update();
-
 
                     String emptyVariable = " ";
 
