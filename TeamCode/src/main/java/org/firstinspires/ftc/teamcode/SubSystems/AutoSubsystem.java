@@ -14,7 +14,6 @@ public class AutoSubsystem {
     public void dumpSampleHigh(){
         slideControl.setTargetPosition(-3550);
         waitForSlide();
-        delay(1000);
         slideControl.setServoPosition(-80);
         delay(200);
         slideControl.setServoPosition(-10);
