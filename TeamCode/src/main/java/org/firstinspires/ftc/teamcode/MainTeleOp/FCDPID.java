@@ -200,7 +200,7 @@ public class FCDPID extends LinearOpMode {
                     }
 
                     if (gamepad2.dpad_right) {
-                        slideControl.setTargetPosition(-1820);
+                        slideControl.setTargetPosition(-10);
                     }
 
                     if (targetSlidePosition > 0) {
