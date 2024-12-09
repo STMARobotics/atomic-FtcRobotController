@@ -19,7 +19,7 @@ public class AutoSubsystem {
         delay(200);
         slideControl.setServoPosition(-10);
         delay(200);
-        slideControl.setTargetPosition(0);
+        slideControl.setTargetPosition(-10);
         waitForSlide();
     }
 
@@ -30,7 +30,7 @@ public class AutoSubsystem {
         delay(250);
         armControl.setPosition("placeholder");
         waitForArm();
-        slideControl.setTargetPosition(0);
+        slideControl.setTargetPosition(-10);
         waitForSlide();
     }
 
@@ -43,7 +43,7 @@ public class AutoSubsystem {
         waitForArm();
         slideControl.setServoPosition(65);
         delay(250);
-        slideControl.setTargetPosition(0);
+        slideControl.setTargetPosition(-10);
         waitForSlide();
     }
 
@@ -63,7 +63,7 @@ public class AutoSubsystem {
     }
 
     public void loadSampleBucket(){
-        slideControl.setTargetPosition(-1820);
+        slideControl.setTargetPosition(-10);
         waitForSlide();
         armControl.setPosition("placeholder");
         waitForArm();
