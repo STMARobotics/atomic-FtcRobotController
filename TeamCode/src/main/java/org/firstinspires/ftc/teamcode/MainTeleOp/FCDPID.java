@@ -100,7 +100,7 @@ public class FCDPID extends LinearOpMode {
                         y = temp;
                     }
 
-                    double turningSpeed = 0.3;
+                    double turningSpeed = 0.5;
 
                     if (Math.abs(rx) > 0.1) {
                         rx = turningSpeed * Math.signum(rx);
