@@ -10,6 +10,7 @@ public class AutoSubsystem {
     double targetServoPosition = 65;
     double currentSlidePosition;
     double currentArmPosition;
+    final CRServo intake = hardwareMap.get(CRServo.class, "intake");
 
     public void dumpSampleHigh(){
         slideControl.setTargetPosition(-3550);
@@ -27,7 +28,7 @@ public class AutoSubsystem {
         waitForSlide();
         slideControl.setServoPosition(-10);
         delay(250);
-        armControl.setPosition(1);
+        armControl.setPosition("placeholder");
         waitForArm();
         slideControl.setTargetPosition(0);
         waitForSlide();
@@ -38,12 +39,45 @@ public class AutoSubsystem {
         waitForSlide();
         slideControl.setServoPosition(-10);
         delay(250);
-        armControl.setPosition(0);
+        armControl.setPosition("placeholder");
         waitForArm();
         slideControl.setServoPosition(65);
         delay(250);
         slideControl.setTargetPosition(0);
         waitForSlide();
+    }
+
+    pubic void pickup(){
+        armControl.setPosition("placeholder");
+        waitForArm();
+    }
+
+    public void specimenPickup(){
+        armControl.setPosition("placeholder");
+        waitForArm();
+    }
+
+    public void specimenDropoff(){
+        armControl.setPosition("placeholder");
+        waitForArm();
+    }
+
+    public void loadSampleBucket(){
+        slideControl.setTargetPosition(-1820);
+        waitForSlide();
+        armControl.setPosition("placeholder");
+        waitForArm();
+        intake.setPower(0.3);
+        delay(400);
+        intake.setPower(0);
+        armControl.setPosition("placeholder");
+        waitForArm();        
+    }
+
+    public void servoDropSample() {
+        slideControl.setServoPosition(-80);
+        delay(200);
+        slideControl.setServoPosition(-10);
     }
 
     public void waitForArm(){
