@@ -16,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.SubSystems.ArmControl;
 import org.firstinspires.ftc.teamcode.FailedStuff.LimelightSubSystem;
+import org.firstinspires.ftc.teamcode.SubSystems.AutoSubsystem;
 import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
 
 @TeleOp
@@ -25,6 +26,7 @@ public class FCDPID extends LinearOpMode {
     private double fieldOffset = 0;
     private ArmControl armControl;
     private SlideControl slideControl;
+    private AutoSubsystem autoSubsystem;
     double targetSlidePosition;
     private double targetArmPosition = 0;
     double targetServoPosition = 65;
@@ -42,13 +44,7 @@ public class FCDPID extends LinearOpMode {
         final CRServo intake = hardwareMap.get(CRServo.class, "intake");
         final DcMotorEx slideMotor = hardwareMap.get(DcMotorEx.class, "slide");
         final Servo slideServo = hardwareMap.get(Servo.class, "servo");
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
         slideControl = new SlideControl(slideMotor, slideServo);
-        LimelightSubSystem limelightSubSystem = new LimelightSubSystem(limelight, imu, frontRight, rearRight, rearLeft, frontLeft);
-
-        limelight.pipelineSwitch(0);
-        telemetry.setMsTransmissionInterval(11);
-        limelight.start();
 
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         rearRight.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -76,47 +72,47 @@ public class FCDPID extends LinearOpMode {
 
             lastButtonState = currentButtonState;
 
-                    double y = gamepad1.left_stick_y;
-                    double x = gamepad1.left_stick_x * 1.1;
-                    double rx = gamepad1.right_stick_x;
-                    double iF = gamepad2.right_trigger * -0.45;
-                    double iR = gamepad2.left_trigger * 0.45;
+            double y = gamepad1.left_stick_y;
+            double x = gamepad1.left_stick_x * 1.1;
+            double rx = gamepad1.right_stick_x;
+            double iF = gamepad2.right_trigger * -0.45;
+            double iR = gamepad2.left_trigger * 0.45;
 
-                    if (halfSpeed) {
-                        y *= 0.3;
-                        x *= 0.3;
-                    }
+            if (halfSpeed) {
+                y *= 0.3;
+                x *= 0.3;
+            }
 
-                    if (gamepad1.y) {
-                        fieldOffset = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
-                    }
+            if (gamepad1.y) {
+                fieldOffset = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+            }
 
-                    double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) - fieldOffset;
-                    double headingRad = Math.toRadians(botHeading);
+            double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) - fieldOffset;
+            double headingRad = Math.toRadians(botHeading);
 
-                    {
-                        double temp = y * Math.cos(headingRad) + x * Math.sin(headingRad);
-                        x = -y * Math.sin(headingRad) + x * Math.cos(headingRad);
-                        y = temp;
-                    }
+            {
+                double temp = y * Math.cos(headingRad) + x * Math.sin(headingRad);
+                x = -y * Math.sin(headingRad) + x * Math.cos(headingRad);
+                y = temp;
+            }
 
-                    double turningSpeed = 0.5;
+            double turningSpeed = 0.5;
 
-                    if (Math.abs(rx) > 0.1) {
-                        rx = turningSpeed * Math.signum(rx);
-                    } else {
-                        rx = 0;
-                    }
+            if (Math.abs(rx) > 0.1) {
+                rx = turningSpeed * Math.signum(rx);
+            } else {
+                rx = 0;
+            }
 
-                    double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-                    double frontRightPower = (y + x + rx) / denominator;
-                    double rearRightPower = (y - x + rx) / denominator;
-                    double rearLeftPower = (y + x - rx) / denominator;
-                    double frontLeftPower = (y - x - rx) / denominator;
-                    double intakePower = (iF + iR);
+            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
+            double frontRightPower = (y + x + rx) / denominator;
+            double rearRightPower = (y - x + rx) / denominator;
+            double rearLeftPower = (y + x - rx) / denominator;
+            double frontLeftPower = (y - x - rx) / denominator;
+            double intakePower = (iF + iR);
 
 
-                    //beyblade protocol
+            //beyblade protocol
 //            if (gamepad1.right_bumper && gamepad1.left_bumper && gamepad2.right_bumper && gamepad2.left_bumper){
 //                frontRightPower = 999;
 //                rearRightPower = 999;
@@ -131,119 +127,118 @@ public class FCDPID extends LinearOpMode {
 //            }
 
 
-                    double currentSlidePosition = slideControl.getCurrentPosition();
-                    if (gamepad2.left_stick_y > 0.1 || gamepad2.left_stick_y < -0.1) {
-                        targetSlidePosition += gamepad2.left_stick_y * 30;
-                    }
-
-                    if (gamepad2.right_stick_y > 0.1 || gamepad2.right_stick_y < -0.1) {
-                        targetArmPosition += gamepad2.right_stick_y * 30;
-                    }
-
-
-                    //old code
-                    // if (gamepad2.dpad_up) {
-                    //     targetServoPosition = -10;
-                    // }
-
-                    // if (gamepad2.dpad_right) {
-                    //     targetServoPosition = 65;
-                    // }
-
-                    // if (gamepad2.dpad_down) {
-                    //     targetServoPosition = -80;
-                    // }
-
-                    // if (gamepad2.y) {
-                    //     targetSlidePosition = -3550;
-                    // }
-
-                    // if (gamepad2.a) {
-                    //     targetSlidePosition = -5;
-                    // }
-
-                    // if (gamepad2.b) {
-                    //     targetSlidePosition = -1820;
-                    // }
-
-                    // if (gamepad2.x) {
-                    //     limelightSubSystem.goToPosition(3,3,45);
-                    // }
-
-                    // if (gamepad2.b) {
-                    //     limelightSubSystem.goToPosition(1,1,0);
-                    // }
-
-                    //experimental code
-                    if (gamepad2.a) {
-                        AutoSubsystem.pickup();
-                    }
-
-                    if (gamepad2.b) {
-                        AutoSubsystem.specimenPickup();
-                    }
-
-                    if (gamepad2.x) {
-                        AutoSubsystem.specimenDropoff();
-                    }
-
-                    if (gamepad2.y) {
-                        AutoSubsystem.loadSampleBucket();
-                    }
-
-                    if (gamepad2.dpad_up) {
-                        AutoSubsystem.dumpSampleHigh();
-                    }
-
-                    if (gamepad2.dpad_down) {
-                        AutoSubsystem.servoDropSample();
-                    }
-
-                    if (gamepad2.dpad_right) {
-                        slideControl.setTargetPosition(-10);
-                    }
-
-                    if (targetSlidePosition > 0) {
-                        targetSlidePosition = 0;
-                    }
-
-                    if (targetSlidePosition < -3800) {
-                        targetSlidePosition = -3800;
-                    }
-
-                    if (currentSlidePosition > -10 || targetSlidePosition > -10){
-                        slideControl.setSlidePower(0);
-                    }
-
-
-                    frontRight.setPower(frontRightPower);
-                    rearRight.setPower(rearRightPower);
-                    rearLeft.setPower(rearLeftPower);
-                    frontLeft.setPower(frontLeftPower);
-                    intake.setPower(intakePower);
-
-                    slideControl.setTargetPosition(targetSlidePosition);
-                    slideControl.setServoPosition(targetServoPosition);
-                    armControl.setPosition(targetArmPosition);
-                    armControl.update();
-                    slideControl.update();
-
-                    String emptyVariable = " ";
-
-                    telemetry.addData("Half-Speed Mode", halfSpeed ? "ON" : "OFF");
-                    telemetry.addData("", emptyVariable);
-                    telemetry.addData("Arm Target Position", armControl.getArmTargetPosition());
-                    telemetry.addData("Arm Position", armControl.getArmPosition());
-                    telemetry.addData("Arm Power", armControl.getArmPower());
-                    telemetry.addData("", emptyVariable);
-                    telemetry.addData("Slide Target Position", slideControl.getTargetPosition());
-                    telemetry.addData("Slide Position", slideControl.getCurrentPosition());
-                    telemetry.addData("Servo Position", targetServoPosition);
-                    telemetry.addData("", emptyVariable);
-                    telemetry.addData("Heading", botHeading);
-                    telemetry.addData("", emptyVariable);
-                    telemetry.addData("Is At Position?", limelightSubSystem.isAtPositionPublic());
-                    telemetry.update();
-                }
+            double currentSlidePosition = slideControl.getCurrentPosition();
+            if (gamepad2.left_stick_y > 0.1 || gamepad2.left_stick_y < -0.1) {
+                targetSlidePosition += gamepad2.left_stick_y * 30;
             }
+
+            if (gamepad2.right_stick_y > 0.1 || gamepad2.right_stick_y < -0.1) {
+                targetArmPosition += gamepad2.right_stick_y * 30;
+            }
+
+
+            //old code
+            // if (gamepad2.dpad_up) {
+            //     targetServoPosition = -10;
+            // }
+
+            // if (gamepad2.dpad_right) {
+            //     targetServoPosition = 65;
+            // }
+
+            // if (gamepad2.dpad_down) {
+            //     targetServoPosition = -80;
+            // }
+
+            // if (gamepad2.y) {
+            //     targetSlidePosition = -3550;
+            // }
+
+            // if (gamepad2.a) {
+            //     targetSlidePosition = -5;
+            // }
+
+            // if (gamepad2.b) {
+            //     targetSlidePosition = -1820;
+            // }
+
+            // if (gamepad2.x) {
+            //     limelightSubSystem.goToPosition(3,3,45);
+            // }
+
+            // if (gamepad2.b) {
+            //     limelightSubSystem.goToPosition(1,1,0);
+            // }
+
+            //experimental code
+            if (gamepad2.a) {
+                autoSubsystem.pickup();
+            }
+
+            if (gamepad2.b) {
+                autoSubsystem.specimenPickup();
+            }
+
+            if (gamepad2.x) {
+                autoSubsystem.specimenDropoff();
+            }
+
+            if (gamepad2.y) {
+                autoSubsystem.loadSampleBucket();
+            }
+
+            if (gamepad2.dpad_up) {
+                autoSubsystem.dumpSampleHigh();
+            }
+
+            if (gamepad2.dpad_down) {
+                autoSubsystem.servoDropSample();
+            }
+
+            if (gamepad2.dpad_right) {
+                slideControl.setTargetPosition(-10);
+            }
+
+            if (targetSlidePosition > 0) {
+                targetSlidePosition = 0;
+            }
+
+            if (targetSlidePosition < -3800) {
+                targetSlidePosition = -3800;
+            }
+
+            if (currentSlidePosition > -10 || targetSlidePosition > -10){
+                slideControl.setSlidePower(0);
+            }
+
+
+            frontRight.setPower(frontRightPower);
+            rearRight.setPower(rearRightPower);
+            rearLeft.setPower(rearLeftPower);
+            frontLeft.setPower(frontLeftPower);
+            intake.setPower(intakePower);
+
+            slideControl.setTargetPosition(targetSlidePosition);
+            slideControl.setServoPosition(targetServoPosition);
+            armControl.setPosition(targetArmPosition);
+            armControl.update();
+            slideControl.update();
+
+            String emptyVariable = " ";
+
+            telemetry.addData("Half-Speed Mode", halfSpeed ? "ON" : "OFF");
+            telemetry.addData("", emptyVariable);
+            telemetry.addData("Arm Target Position", armControl.getArmTargetPosition());
+            telemetry.addData("Arm Position", armControl.getArmPosition());
+            telemetry.addData("Arm Power", armControl.getArmPower());
+            telemetry.addData("", emptyVariable);
+            telemetry.addData("Slide Target Position", slideControl.getTargetPosition());
+            telemetry.addData("Slide Position", slideControl.getCurrentPosition());
+            telemetry.addData("Servo Position", targetServoPosition);
+            telemetry.addData("", emptyVariable);
+            telemetry.addData("Heading", botHeading);
+            telemetry.addData("", emptyVariable);
+            telemetry.update();
         }
+    }
+}

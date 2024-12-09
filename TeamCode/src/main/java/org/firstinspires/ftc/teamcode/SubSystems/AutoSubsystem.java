@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.CRServo;
 
 public class AutoSubsystem {
     private ArmControl armControl;
@@ -28,7 +31,7 @@ public class AutoSubsystem {
         waitForSlide();
         slideControl.setServoPosition(-10);
         delay(250);
-        armControl.setPosition("placeholder");
+        armControl.setPosition(0);
         waitForArm();
         slideControl.setTargetPosition(-10);
         waitForSlide();
@@ -39,7 +42,7 @@ public class AutoSubsystem {
         waitForSlide();
         slideControl.setServoPosition(-10);
         delay(250);
-        armControl.setPosition("placeholder");
+        armControl.setPosition(0);
         waitForArm();
         slideControl.setServoPosition(65);
         delay(250);
@@ -47,31 +50,31 @@ public class AutoSubsystem {
         waitForSlide();
     }
 
-    pubic void pickup(){
-        armControl.setPosition("placeholder");
+    public void pickup(){
+        armControl.setPosition(0);
         waitForArm();
     }
 
     public void specimenPickup(){
-        armControl.setPosition("placeholder");
+        armControl.setPosition(0);
         waitForArm();
     }
 
     public void specimenDropoff(){
-        armControl.setPosition("placeholder");
+        armControl.setPosition(0);
         waitForArm();
     }
 
     public void loadSampleBucket(){
         slideControl.setTargetPosition(-10);
         waitForSlide();
-        armControl.setPosition("placeholder");
+        armControl.setPosition(0);
         waitForArm();
         intake.setPower(0.3);
         delay(400);
         intake.setPower(0);
-        armControl.setPosition("placeholder");
-        waitForArm();        
+        armControl.setPosition(1);
+        waitForArm();
     }
 
     public void servoDropSample() {
