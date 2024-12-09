@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.SubSystems;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.CRServo;
 
@@ -13,7 +14,15 @@ public class AutoSubsystem {
     double targetServoPosition = 65;
     double currentSlidePosition;
     double currentArmPosition;
-    final CRServo intake = hardwareMap.get(CRServo.class, "intake");
+    private CRServo intake;
+
+
+
+    public AutoSubsystem(HardwareMap hardwareMap, ArmControl armControl, SlideControl slideControl) {
+        this.armControl = armControl;
+        this.slideControl = slideControl;
+        this.intake = hardwareMap.get(CRServo.class, "intake");
+    }
 
     public void dumpSampleHigh(){
         slideControl.setTargetPosition(-3550);
@@ -108,6 +117,5 @@ public class AutoSubsystem {
         while (timer.milliseconds() < milliseconds) {
         }
     }
-
 
 }

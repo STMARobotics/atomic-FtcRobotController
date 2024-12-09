@@ -13,7 +13,7 @@ public class ArmControl {
     private static final double kP = 0.0075;
     private static final double kI = 0.001;
     private static final double kD = 0;
-    private static final double kF = 0.001;
+    private static final double kF = 0.01;
 
     public ArmControl(HardwareMap hardwareMap) {
         arm = new MotorEx(hardwareMap, "arm");

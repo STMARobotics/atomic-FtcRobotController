@@ -96,7 +96,7 @@ public class FCDPID extends LinearOpMode {
                 y = temp;
             }
 
-            double turningSpeed = 0.5;
+            double turningSpeed = 0.4;
 
             if (Math.abs(rx) > 0.1) {
                 rx = turningSpeed * Math.signum(rx);
@@ -172,27 +172,75 @@ public class FCDPID extends LinearOpMode {
 
             //experimental code
             if (gamepad2.a) {
-                autoSubsystem.pickup();
+                armControl.setPosition(4050);
+                while (Math.abs(armControl.getArmPosition() - armControl.getArmTargetPosition()) > 2) {
+                    slideControl.update();
+                }
             }
 
             if (gamepad2.b) {
-                autoSubsystem.specimenPickup();
+                armControl.setPosition(3600);
+                while (Math.abs(armControl.getArmPosition() - armControl.getArmTargetPosition()) > 2) {
+                    slideControl.update();
+                }
             }
 
             if (gamepad2.x) {
-                autoSubsystem.specimenDropoff();
+                armControl.setPosition(2700);
+                while (Math.abs(armControl.getArmPosition() - armControl.getArmTargetPosition()) > 2) {
+                    slideControl.update();
+                }
             }
 
             if (gamepad2.y) {
-                autoSubsystem.loadSampleBucket();
+                slideControl.setTargetPosition(-10);
+                while (Math.abs(slideControl.getCurrentPosition() - slideControl.getTargetPosition()) > 2) {
+                    slideControl.update();
+                }
+                armControl.setPosition(1400);
+                while (Math.abs(armControl.getArmPosition() - armControl.getArmTargetPosition()) > 2) {
+                    slideControl.update();
+                }
+                intake.setPower(0.3);
+                long startTime = System.currentTimeMillis();
+                while (System.currentTimeMillis() - startTime < 400) {
+                    // Wait
+                }
+                intake.setPower(0);
+                armControl.setPosition(3600);
+                while (Math.abs(armControl.getArmPosition() - armControl.getArmTargetPosition()) > 2) {
+                    slideControl.update();
+                }
             }
 
             if (gamepad2.dpad_up) {
-                autoSubsystem.dumpSampleHigh();
+                slideControl.setTargetPosition(-3550);
+                while (Math.abs(slideControl.getCurrentPosition() - slideControl.getTargetPosition()) > 2) {
+                    slideControl.update();
+                }
+                slideControl.setServoPosition(-80);
+                long startTime = System.currentTimeMillis();
+                while (System.currentTimeMillis() - startTime < 200) {
+                    // Wait
+                }
+                slideControl.setServoPosition(-10);
+                startTime = System.currentTimeMillis();
+                while (System.currentTimeMillis() - startTime < 200) {
+                    // Wait
+                }
+                slideControl.setTargetPosition(-10);
+                while (Math.abs(slideControl.getCurrentPosition() - slideControl.getTargetPosition()) > 2) {
+                    slideControl.update();
+                }
             }
 
             if (gamepad2.dpad_down) {
-                autoSubsystem.servoDropSample();
+                slideControl.setServoPosition(-80);
+                long startTime = System.currentTimeMillis();
+                while (System.currentTimeMillis() - startTime < 200) {
+                    // Wait
+                }
+                slideControl.setServoPosition(-10);
             }
 
             if (gamepad2.dpad_right) {
