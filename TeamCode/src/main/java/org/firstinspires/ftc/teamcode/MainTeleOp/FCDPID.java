@@ -211,7 +211,7 @@ public class FCDPID extends LinearOpMode {
                         targetSlidePosition = -3800;
                     }
 
-                    if (currentSlidePosition > -5 || targetSlidePosition > -5){
+                    if (currentSlidePosition > -10 || targetSlidePosition > -10){
                         slideControl.setSlidePower(0);
                     }
 
