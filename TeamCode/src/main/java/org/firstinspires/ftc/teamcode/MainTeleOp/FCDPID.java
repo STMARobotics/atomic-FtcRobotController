@@ -204,7 +204,7 @@ public class FCDPID extends LinearOpMode {
                 intake.setPower(0.3);
                 long startTime = System.currentTimeMillis();
                 while (System.currentTimeMillis() - startTime < 400) {
-                    // Wait
+                
                 }
                 intake.setPower(0);
                 armControl.setPosition(3600);
@@ -221,12 +221,12 @@ public class FCDPID extends LinearOpMode {
                 slideControl.setServoPosition(-80);
                 long startTime = System.currentTimeMillis();
                 while (System.currentTimeMillis() - startTime < 200) {
-                    // Wait
+            
                 }
                 slideControl.setServoPosition(-10);
                 startTime = System.currentTimeMillis();
                 while (System.currentTimeMillis() - startTime < 200) {
-                    // Wait
+                
                 }
                 slideControl.setTargetPosition(-10);
                 while (Math.abs(slideControl.getCurrentPosition() - slideControl.getTargetPosition()) > 2) {
