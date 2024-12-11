@@ -66,6 +66,11 @@ public class SlideControl {
         servo.setPosition(mappedPosition);
     }
 
+    public double getServoPosition(servoPosition){
+        servoPosition = position;
+        return servoPosition;
+    }
+
     public void update() {
         currentPosition = slide.getCurrentPosition();
         updatePIDControl();
