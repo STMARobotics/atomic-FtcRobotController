@@ -45,7 +45,6 @@ public class ArmControl {
         double feedforward = kF + kV * velocity + kA * acceleration;
         double gravityCompensation = kG * Math.cos(Math.toRadians(currentPosition));
 
-         PID control with feedforward and gravity compensation
         double armPower = armPID.calculate(currentPosition, armTargetPosition) + feedforward + gravityCompensation;
 
         arm.set(armPower);

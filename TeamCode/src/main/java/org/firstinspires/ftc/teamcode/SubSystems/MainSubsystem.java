@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.SubSystems.ArmControl;
 import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
 
@@ -26,6 +29,10 @@ public class MainSubsystem {
         slideControl = new SlideControl(hardwareMap);
         imu = hardwareMap.get(IMU.class, "imu");
         batterySensor = hardwareMap.voltageSensor.iterator().next();
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
+        imu.initialize(parameters);
     }
 
     public double getArmPosition() {
@@ -57,13 +64,13 @@ public class MainSubsystem {
         return 0;
     }
 
-    public double getBucketServoTargetPosition() {
-        return slideControl.getServoPosition();
-    }
+//    public double getBucketServoTargetPosition() {
+//        //not working
+//    }
 
     public void calibrate() {
         armControl.resetZero();
-        slideControl.resetZero();
+        slideControl.resetEncoder();
         isCalibrated = true;
     }
 
@@ -71,12 +78,11 @@ public class MainSubsystem {
         try (FileWriter writer = new FileWriter("logData.csv", true)) {
             String timestamp = new Date().toString();
 
-            double imuX = imu.getAngularOrientation().firstAngle;
-            double imuY = imu.getAngularOrientation().secondAngle;
-            double imuZ = imu.getAngularOrientation().thirdAngle;
+            double imuX = imu.getRobotYawPitchRollAngles().getPitch(AngleUnit.DEGREES);
+            double imuY = imu.getRobotYawPitchRollAngles().getRoll(AngleUnit.DEGREES);
+            double imuZ = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
 
             double batteryLevel = batterySensor.getVoltage();
-            double temperature = batterySensor.getTemperature(); // Assuming the sensor supports temperature readings
 
             double armPower = armControl.getArmPower();
             double armPosition = armControl.getArmPosition();
@@ -90,7 +96,7 @@ public class MainSubsystem {
             double joystick2Y = gamepad2.left_stick_y;
 
             writer.write(String.format("%s,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%s,%s,%.2f,%.2f,%.2f,%.2f\n",
-                timestamp, imuX, imuY, imuZ, batteryLevel, temperature, armPower, armPosition, slidePosition, 
+                timestamp, imuX, imuY, imuZ, batteryLevel, armPower, armPosition, slidePosition,
                 gamepad1Buttons, gamepad2Buttons, joystick1X, joystick1Y, joystick2X, joystick2Y));
         } catch (IOException e) {
             e.printStackTrace();

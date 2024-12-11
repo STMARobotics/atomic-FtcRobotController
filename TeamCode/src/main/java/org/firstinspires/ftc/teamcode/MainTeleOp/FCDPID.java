@@ -27,7 +27,7 @@ public class FCDPID extends LinearOpMode {
     private double fieldOffset = 0;
     private ArmControl armControl;
     private SlideControl slideControl;
-    private MainSubsystem MainSubsystem
+    private MainSubsystem MainSubsystem;
     private AutoSubsystem autoSubsystem;
     double targetSlidePosition;
     private double targetArmPosition = 0;

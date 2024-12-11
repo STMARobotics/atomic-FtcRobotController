@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -13,7 +14,8 @@ public class SlideControl {
     private double targetPosition;
     private double currentPosition;
     private ElapsedTime runtime = new ElapsedTime();
-
+    private double position1;
+    
     private double kP = 0.0075, kI = 0, kD = 0.0;
     private double previousError = 0, integral = 0;
 
@@ -22,6 +24,9 @@ public class SlideControl {
         this.servo = servo;
         this.targetPosition = 0;
         this.currentPosition = 0;
+    }
+
+    public SlideControl(HardwareMap hardwareMap) {
     }
 
     public void resetEncoder() {
@@ -65,9 +70,9 @@ public class SlideControl {
 
         servo.setPosition(mappedPosition);
     }
-
-    public double getServoPosition(servoPosition){
-        servoPosition = position;
+    //literally broken
+    public double getServoPosition(double servoPosition){
+        servoPosition = position1;
         return servoPosition;
     }
 
