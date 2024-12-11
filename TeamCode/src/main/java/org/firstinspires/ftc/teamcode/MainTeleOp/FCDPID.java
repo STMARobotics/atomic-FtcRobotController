@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.ArmControl;
 import org.firstinspires.ftc.teamcode.FailedStuff.LimelightSubSystem;
 import org.firstinspires.ftc.teamcode.SubSystems.AutoSubsystem;
 import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
+import org.firstinspires.ftc.teamcode.SubSystems.MainSubsystem;
 
 @TeleOp
 public class FCDPID extends LinearOpMode {
@@ -26,6 +27,7 @@ public class FCDPID extends LinearOpMode {
     private double fieldOffset = 0;
     private ArmControl armControl;
     private SlideControl slideControl;
+    private MainSubsystem MainSubsystem
     private AutoSubsystem autoSubsystem;
     double targetSlidePosition;
     private double targetArmPosition = 0;
@@ -220,12 +222,12 @@ public class FCDPID extends LinearOpMode {
                 }
                 slideControl.setServoPosition(-80);
                 long startTime = System.currentTimeMillis();
-                while (System.currentTimeMillis() - startTime < 200) {
+                while (System.currentTimeMillis() - startTime < 500) {
             
                 }
                 slideControl.setServoPosition(-10);
                 startTime = System.currentTimeMillis();
-                while (System.currentTimeMillis() - startTime < 200) {
+                while (System.currentTimeMillis() - startTime < 500) {
                 
                 }
                 slideControl.setTargetPosition(-10);
@@ -237,7 +239,7 @@ public class FCDPID extends LinearOpMode {
             if (gamepad2.dpad_down) {
                 slideControl.setServoPosition(-80);
                 long startTime = System.currentTimeMillis();
-                while (System.currentTimeMillis() - startTime < 200) {
+                while (System.currentTimeMillis() - startTime < 500) {
                     // Wait
                 }
                 slideControl.setServoPosition(-10);
