@@ -78,8 +78,8 @@ public class FCDPID extends LinearOpMode {
             double y = gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x * 1.1;
             double rx = gamepad1.right_stick_x;
-            double iF = gamepad2.right_trigger * -0.45;
-            double iR = gamepad2.left_trigger * 0.45;
+            double iF = gamepad2.right_trigger;
+            double iR = gamepad2.left_trigger * -1;
 
             if (halfSpeed) {
                 y *= 0.3;
@@ -140,132 +140,29 @@ public class FCDPID extends LinearOpMode {
             }
 
 
-            if (gamepad2.dpad_down) {
-                slideControl.setTargetPosition(0);
-                while (slideControl.getCurrentPosition() <1 ) {
-                slideControl.update();
-                }
-                slideControl.setServoPosition(-10);
-            }
-
             if (gamepad2.dpad_up) {
-                slideControl.setTargetPosition(-3550);
+                targetServoPosition = -10;
             }
-
 
             if (gamepad2.dpad_right) {
-                slideControl.setTargetPosition(-1820);
+                targetServoPosition = 65;
             }
 
-            if (gamepad2.dpad_left) {
-                slideControl.setServoPosition(-80);
-                sleep(1000);
-                slideControl.setServoPosition(-10);
+            if (gamepad2.dpad_down) {
+                targetServoPosition = -80;
             }
 
+            if (gamepad2.y) {
+                targetSlidePosition = -3550;
+            }
 
+            if (gamepad2.a) {
+                targetSlidePosition = 0;
+            }
 
-//             if (gamepad2.dpad_up) {
-//                 targetServoPosition = -10;
-//             }
-//
-//             if (gamepad2.dpad_right) {
-//                 targetServoPosition = 65;
-//             }
-//
-//             if (gamepad2.dpad_down) {
-//                 targetServoPosition = -80;
-//             }
-//
-//             if (gamepad2.y) {
-//                 targetSlidePosition = -3550;
-//             }
-//
-//             if (gamepad2.a) {
-//                 targetSlidePosition = -5;
-//             }
-//
-//             if (gamepad2.b) {
-//                 targetSlidePosition = -1820;
-//             }
-
-
-//            //experimental code
-//            if (gamepad2.a) {
-//                armControl.setPosition(4050);
-//                while (mainSubsystem.getArmError() > 2) {
-//                    slideControl.update();
-//                }
-//            }
-//
-//            if (gamepad2.b) {
-//                armControl.setPosition(3600);
-//                while (mainSubsystem.getArmError() > 2) {
-//                    slideControl.update();
-//                }
-//            }
-//
-//            if (gamepad2.x) {
-//                armControl.setPosition(2700);
-//                while (mainSubsystem.getArmError() > 2) {
-//                    slideControl.update();
-//                }
-//            }
-//
-//            if (gamepad2.y) {
-//                slideControl.setTargetPosition(-10);
-//                while (mainSubsystem.getSlideError() > 2) {
-//                    slideControl.update();
-//                }
-//                armControl.setPosition(1400);
-//                while (mainSubsystem.getArmError() > 2) {
-//                    slideControl.update();
-//                }
-//                intake.setPower(0.3);
-//                long startTime = System.currentTimeMillis();
-//                while (System.currentTimeMillis() - startTime < 400) {
-//
-//                }
-//                intake.setPower(0);
-//                armControl.setPosition(3600);
-//                while (mainSubsystem.getArmError() > 2) {
-//                    slideControl.update();
-//                }
-//            }
-//
-//            if (gamepad2.dpad_up) {
-//                slideControl.setTargetPosition(-3550);
-//                while (mainSubsystem.getArmError() > 2) {
-//                    slideControl.update();
-//                }
-//                slideControl.setServoPosition(-80);
-//                long startTime = System.currentTimeMillis();
-//                while (System.currentTimeMillis() - startTime < 500) {
-//
-//                }
-//                slideControl.setServoPosition(-10);
-//                startTime = System.currentTimeMillis();
-//                while (System.currentTimeMillis() - startTime < 500) {
-//
-//                }
-//                slideControl.setTargetPosition(-10);
-//                while (mainSubsystem.getSlideError() > 2) {
-//                    slideControl.update();
-//                }
-//            }
-//
-//            if (gamepad2.dpad_down) {
-//                slideControl.setServoPosition(-80);
-//                long startTime = System.currentTimeMillis();
-//                while (System.currentTimeMillis() - startTime < 500) {
-//                    // Wait
-//                }
-//                slideControl.setServoPosition(-10);
-//            }
-//
-//            if (gamepad2.dpad_right) {
-//                slideControl.setTargetPosition(-10);
-//            }
+            if (gamepad2.b) {
+                targetSlidePosition = -1820;
+            }
 
             if (targetSlidePosition > 0) {
                 targetSlidePosition = 0;
