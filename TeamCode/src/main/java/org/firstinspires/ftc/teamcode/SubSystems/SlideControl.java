@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -15,7 +16,9 @@ public class SlideControl {
     private double currentPosition;
     private ElapsedTime runtime = new ElapsedTime();
     private double position1;
-    
+
+    private static final double TICKS_PER_REVOLUTION = 28;
+
     private double kP = 0.0075, kI = 0, kD = 0.0;
     private double previousError = 0, integral = 0;
 
@@ -69,11 +72,6 @@ public class SlideControl {
         double mappedPosition = (position + 90) / 180.0;
 
         servo.setPosition(mappedPosition);
-    }
-    //literally broken
-    public double getServoPosition(double servoPosition){
-        servoPosition = position1;
-        return servoPosition;
     }
 
     public void update() {

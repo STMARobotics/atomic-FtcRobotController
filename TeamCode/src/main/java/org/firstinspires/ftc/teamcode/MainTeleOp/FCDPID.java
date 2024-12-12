@@ -9,13 +9,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.SubSystems.ArmControl;
-import org.firstinspires.ftc.teamcode.FailedStuff.LimelightSubSystem;
 import org.firstinspires.ftc.teamcode.SubSystems.AutoSubsystem;
 import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
 import org.firstinspires.ftc.teamcode.SubSystems.MainSubsystem;
@@ -27,13 +23,14 @@ public class FCDPID extends LinearOpMode {
     private double fieldOffset = 0;
     private ArmControl armControl;
     private SlideControl slideControl;
-    private MainSubsystem MainSubsystem;
+    private MainSubsystem mainSubsystem;
     private AutoSubsystem autoSubsystem;
     double targetSlidePosition;
     private double targetArmPosition = 0;
     double targetServoPosition = 65;
     private DcMotor frontRight, rearRight, rearLeft, frontLeft;
     private IMU imu;
+    boolean dpadDownPressed = false;
 
 
 
@@ -98,7 +95,7 @@ public class FCDPID extends LinearOpMode {
                 y = temp;
             }
 
-            double turningSpeed = 0.4;
+            double turningSpeed = 0.3;
 
             if (Math.abs(rx) > 0.1) {
                 rx = turningSpeed * Math.signum(rx);
@@ -135,119 +132,138 @@ public class FCDPID extends LinearOpMode {
             }
 
             if (gamepad2.right_stick_y > 0.1 || gamepad2.right_stick_y < -0.1) {
-                targetArmPosition += gamepad2.right_stick_y * 30;
+                targetArmPosition += gamepad2.right_stick_y * 100;
             }
 
 
-            //old code
-            // if (gamepad2.dpad_up) {
-            //     targetServoPosition = -10;
-            // }
-
-            // if (gamepad2.dpad_right) {
-            //     targetServoPosition = 65;
-            // }
-
-            // if (gamepad2.dpad_down) {
-            //     targetServoPosition = -80;
-            // }
-
-            // if (gamepad2.y) {
-            //     targetSlidePosition = -3550;
-            // }
-
-            // if (gamepad2.a) {
-            //     targetSlidePosition = -5;
-            // }
-
-            // if (gamepad2.b) {
-            //     targetSlidePosition = -1820;
-            // }
-
-            // if (gamepad2.x) {
-            //     limelightSubSystem.goToPosition(3,3,45);
-            // }
-
-            // if (gamepad2.b) {
-            //     limelightSubSystem.goToPosition(1,1,0);
-            // }
-
-            //experimental code
-            if (gamepad2.a) {
-                armControl.setPosition(4050);
-                while (Math.abs(armControl.getArmPosition() - armControl.getArmTargetPosition()) > 2) {
-                    slideControl.update();
-                }
+            if (gamepad2.dpad_down) {
+                slideControl.setTargetPosition(0);
+                dpadDownPressed = true;
             }
 
-            if (gamepad2.b) {
-                armControl.setPosition(3600);
-                while (Math.abs(armControl.getArmPosition() - armControl.getArmTargetPosition()) > 2) {
-                    slideControl.update();
-                }
-            }
-
-            if (gamepad2.x) {
-                armControl.setPosition(2700);
-                while (Math.abs(armControl.getArmPosition() - armControl.getArmTargetPosition()) > 2) {
-                    slideControl.update();
-                }
-            }
-
-            if (gamepad2.y) {
-                slideControl.setTargetPosition(-10);
-                while (Math.abs(slideControl.getCurrentPosition() - slideControl.getTargetPosition()) > 2) {
-                    slideControl.update();
-                }
-                armControl.setPosition(1400);
-                while (Math.abs(armControl.getArmPosition() - armControl.getArmTargetPosition()) > 2) {
-                    slideControl.update();
-                }
-                intake.setPower(0.3);
-                long startTime = System.currentTimeMillis();
-                while (System.currentTimeMillis() - startTime < 400) {
-                
-                }
-                intake.setPower(0);
-                armControl.setPosition(3600);
-                while (Math.abs(armControl.getArmPosition() - armControl.getArmTargetPosition()) > 2) {
-                    slideControl.update();
-                }
+            if (dpadDownPressed && Math.abs(slideControl.getCurrentPosition() - 0) < 10) {
+                slideControl.setServoPosition(-10);
+                dpadDownPressed = false;
             }
 
             if (gamepad2.dpad_up) {
                 slideControl.setTargetPosition(-3550);
-                while (Math.abs(slideControl.getCurrentPosition() - slideControl.getTargetPosition()) > 2) {
-                    slideControl.update();
-                }
-                slideControl.setServoPosition(-80);
-                long startTime = System.currentTimeMillis();
-                while (System.currentTimeMillis() - startTime < 500) {
-            
-                }
-                slideControl.setServoPosition(-10);
-                startTime = System.currentTimeMillis();
-                while (System.currentTimeMillis() - startTime < 500) {
-                
-                }
-                slideControl.setTargetPosition(-10);
-                while (Math.abs(slideControl.getCurrentPosition() - slideControl.getTargetPosition()) > 2) {
-                    slideControl.update();
-                }
             }
 
-            if (gamepad2.dpad_down) {
-                slideControl.setServoPosition(-80);
-                long startTime = System.currentTimeMillis();
-                while (System.currentTimeMillis() - startTime < 500) {
-                    // Wait
-                }
-                slideControl.setServoPosition(-10);
-            }
 
             if (gamepad2.dpad_right) {
-                slideControl.setTargetPosition(-10);
+                slideControl.setTargetPosition(-1820);
             }
+
+            if (gamepad2.dpad_left) {
+                slideControl.setServoPosition(-80);
+                sleep(1000);
+                slideControl.setServoPosition(-10);
+            }
+
+
+
+//             if (gamepad2.dpad_up) {
+//                 targetServoPosition = -10;
+//             }
+//
+//             if (gamepad2.dpad_right) {
+//                 targetServoPosition = 65;
+//             }
+//
+//             if (gamepad2.dpad_down) {
+//                 targetServoPosition = -80;
+//             }
+//
+//             if (gamepad2.y) {
+//                 targetSlidePosition = -3550;
+//             }
+//
+//             if (gamepad2.a) {
+//                 targetSlidePosition = -5;
+//             }
+//
+//             if (gamepad2.b) {
+//                 targetSlidePosition = -1820;
+//             }
+
+
+//            //experimental code
+//            if (gamepad2.a) {
+//                armControl.setPosition(4050);
+//                while (mainSubsystem.getArmError() > 2) {
+//                    slideControl.update();
+//                }
+//            }
+//
+//            if (gamepad2.b) {
+//                armControl.setPosition(3600);
+//                while (mainSubsystem.getArmError() > 2) {
+//                    slideControl.update();
+//                }
+//            }
+//
+//            if (gamepad2.x) {
+//                armControl.setPosition(2700);
+//                while (mainSubsystem.getArmError() > 2) {
+//                    slideControl.update();
+//                }
+//            }
+//
+//            if (gamepad2.y) {
+//                slideControl.setTargetPosition(-10);
+//                while (mainSubsystem.getSlideError() > 2) {
+//                    slideControl.update();
+//                }
+//                armControl.setPosition(1400);
+//                while (mainSubsystem.getArmError() > 2) {
+//                    slideControl.update();
+//                }
+//                intake.setPower(0.3);
+//                long startTime = System.currentTimeMillis();
+//                while (System.currentTimeMillis() - startTime < 400) {
+//
+//                }
+//                intake.setPower(0);
+//                armControl.setPosition(3600);
+//                while (mainSubsystem.getArmError() > 2) {
+//                    slideControl.update();
+//                }
+//            }
+//
+//            if (gamepad2.dpad_up) {
+//                slideControl.setTargetPosition(-3550);
+//                while (mainSubsystem.getArmError() > 2) {
+//                    slideControl.update();
+//                }
+//                slideControl.setServoPosition(-80);
+//                long startTime = System.currentTimeMillis();
+//                while (System.currentTimeMillis() - startTime < 500) {
+//
+//                }
+//                slideControl.setServoPosition(-10);
+//                startTime = System.currentTimeMillis();
+//                while (System.currentTimeMillis() - startTime < 500) {
+//
+//                }
+//                slideControl.setTargetPosition(-10);
+//                while (mainSubsystem.getSlideError() > 2) {
+//                    slideControl.update();
+//                }
+//            }
+//
+//            if (gamepad2.dpad_down) {
+//                slideControl.setServoPosition(-80);
+//                long startTime = System.currentTimeMillis();
+//                while (System.currentTimeMillis() - startTime < 500) {
+//                    // Wait
+//                }
+//                slideControl.setServoPosition(-10);
+//            }
+//
+//            if (gamepad2.dpad_right) {
+//                slideControl.setTargetPosition(-10);
+//            }
 
             if (targetSlidePosition > 0) {
                 targetSlidePosition = 0;
@@ -280,7 +296,6 @@ public class FCDPID extends LinearOpMode {
             telemetry.addData("", emptyVariable);
             telemetry.addData("Arm Target Position", armControl.getArmTargetPosition());
             telemetry.addData("Arm Position", armControl.getArmPosition());
-            telemetry.addData("Arm Power", armControl.getArmPower());
             telemetry.addData("", emptyVariable);
             telemetry.addData("Slide Target Position", slideControl.getTargetPosition());
             telemetry.addData("Slide Position", slideControl.getCurrentPosition());

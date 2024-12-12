@@ -84,7 +84,6 @@ public class MainSubsystem {
 
             double batteryLevel = batterySensor.getVoltage();
 
-            double armPower = armControl.getArmPower();
             double armPosition = armControl.getArmPosition();
             double slidePosition = slideControl.getCurrentPosition();
 
@@ -96,7 +95,7 @@ public class MainSubsystem {
             double joystick2Y = gamepad2.left_stick_y;
 
             writer.write(String.format("%s,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%s,%s,%.2f,%.2f,%.2f,%.2f\n",
-                timestamp, imuX, imuY, imuZ, batteryLevel, armPower, armPosition, slidePosition,
+                timestamp, imuX, imuY, imuZ, batteryLevel, armPosition, slidePosition,
                 gamepad1Buttons, gamepad2Buttons, joystick1X, joystick1Y, joystick2X, joystick2Y));
         } catch (IOException e) {
             e.printStackTrace();
