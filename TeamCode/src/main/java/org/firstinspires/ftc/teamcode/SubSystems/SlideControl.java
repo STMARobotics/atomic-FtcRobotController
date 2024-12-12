@@ -15,7 +15,6 @@ public class SlideControl {
     private double targetPosition;
     private double currentPosition;
     private ElapsedTime runtime = new ElapsedTime();
-    private double position1;
 
     private static final double TICKS_PER_REVOLUTION = 28;
 

@@ -40,6 +40,10 @@ public class FCDPID extends LinearOpMode {
         final DcMotor rearRight = hardwareMap.dcMotor.get("rearRight");
         final DcMotor rearLeft = hardwareMap.dcMotor.get("rearLeft");
         final DcMotor frontLeft = hardwareMap.dcMotor.get("frontLeft");
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         final CRServo intake = hardwareMap.get(CRServo.class, "intake");
         final DcMotorEx slideMotor = hardwareMap.get(DcMotorEx.class, "slide");
         final Servo slideServo = hardwareMap.get(Servo.class, "servo");
@@ -138,12 +142,10 @@ public class FCDPID extends LinearOpMode {
 
             if (gamepad2.dpad_down) {
                 slideControl.setTargetPosition(0);
-                dpadDownPressed = true;
-            }
-
-            if (dpadDownPressed && Math.abs(slideControl.getCurrentPosition() - 0) < 10) {
+                while (slideControl.getCurrentPosition() <1 ) {
+                slideControl.update();
+                }
                 slideControl.setServoPosition(-10);
-                dpadDownPressed = false;
             }
 
             if (gamepad2.dpad_up) {
@@ -284,8 +286,8 @@ public class FCDPID extends LinearOpMode {
             frontLeft.setPower(frontLeftPower);
             intake.setPower(intakePower);
 
-            slideControl.setTargetPosition(targetSlidePosition);
-            slideControl.setServoPosition(targetServoPosition);
+//            slideControl.setTargetPosition(targetSlidePosition);
+//            slideControl.setServoPosition(targetServoPosition);
             armControl.setPosition(targetArmPosition);
             armControl.update();
             slideControl.update();
