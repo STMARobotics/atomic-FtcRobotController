@@ -18,12 +18,13 @@ public class SlideControl {
 
     private static final double TICKS_PER_REVOLUTION = 28;
 
-    private double kP = 0.0075, kI = 0, kD = 0.0;
+    private double kP = 0.01, kI = 0, kD = 0.0;
     private double previousError = 0, integral = 0;
 
     public SlideControl(DcMotorEx slide, Servo servo) {
         this.slide = slide;
         this.servo = servo;
+        slide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.targetPosition = 0;
         this.currentPosition = 0;
     }
@@ -65,6 +66,8 @@ public class SlideControl {
         slide.setPower(power);
     }
 
+
+
     public void setServoPosition(double position) {
         position = Math.max(-90, Math.min(90, position));
 
@@ -77,6 +80,27 @@ public class SlideControl {
         currentPosition = slide.getCurrentPosition();
         updatePIDControl();
     }
+
+    public void autoSlideMover(double autoTargetPosition){
+        setTargetPosition(autoTargetPosition);
+        while (Math.abs(autoTargetPosition - getCurrentPosition()) > 5){
+            update();
+        }
+        slide.setPower(0);
+    }
+
+
+    public void autoDidntZero(double isButtonPressed){
+        slide.setPower(-1);
+        if (isButtonPressed == 1){
+            resetEncoder();
+        }
+    }
+
+    public void setPower(double setPower){
+        slide.setPower(setPower);
+    }
+
 
     public void updateTelemetry(Telemetry telemetry) {
         telemetry.addData("Current Motor Position", currentPosition);

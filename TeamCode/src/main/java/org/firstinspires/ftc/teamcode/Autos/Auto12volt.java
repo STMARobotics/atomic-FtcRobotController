@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Autos;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -14,7 +15,7 @@ import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
 import org.firstinspires.ftc.teamcode.SubSystems.AutoSubsystem;
 
 @Autonomous
-public class AutoV2 extends LinearOpMode {
+public class Auto12volt extends LinearOpMode {
 
     private AutoSubsystem autoSubsystem;
     private ArmControl armControl;
@@ -31,9 +32,14 @@ public class AutoV2 extends LinearOpMode {
         DcMotor rearRight = hardwareMap.dcMotor.get("rearRight");
         DcMotor rearLeft = hardwareMap.dcMotor.get("rearLeft");
         DcMotor frontLeft = hardwareMap.dcMotor.get("frontLeft");
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         DcMotorEx slideMotor = hardwareMap.get(DcMotorEx.class, "slide");
         Servo slideServo = hardwareMap.get(Servo.class, "servo");
-
+        final CRServo intake = hardwareMap.get(CRServo.class, "intake");
+        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armControl = new ArmControl(hardwareMap);
         slideControl = new SlideControl(slideMotor, slideServo);
 
@@ -56,22 +62,78 @@ public class AutoV2 extends LinearOpMode {
 
         fieldOffset = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
 
-        slideControl.setServoPosition(65);
+        slideControl.setServoPosition(0);
 
-        // Autonomous stuff
-        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, -0.3, 1600);
+        // move to basket
+        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, -0.6, 550);
 
         rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, -45);
 
-        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, 0.3, 1450);
+        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, 0.6, 750);
         stopDrivetrain(frontLeft, rearLeft, rearRight, frontRight);
 
+        //drop 1st sample in basket
+        slideControl.autoSlideMover(-3550);
+        slideControl.setServoPosition(-80);
+        sleep(850);
+        slideControl.setServoPosition(-10);
+        armControl.autoArmMover(4950);
+        slideControl.autoSlideMover(-10);
 
+        //rotate to pickup 2nd
+        rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, -12);
 
+        //grab second
+        intake.setPower(1);
+        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, -0.3, 750);
+        stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
+        intake.setPower(0);
+        armControl.autoArmMover(1540);
+        intake.setPower(-1);
+        sleep(300);
+        intake.setPower(0);
+        armControl.autoArmMover(4950);
+        slideControl.setServoPosition(0);
 
-        rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, 0);
+        //move to drop 2nd
+        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, 0.3, 500);
+
+        rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, -45);
 
         stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
+
+        //drop 2nd
+        slideControl.autoSlideMover(-3550);
+        slideControl.setServoPosition(-80);
+        sleep(850);
+        slideControl.setServoPosition(0);
+        slideControl.autoSlideMover(-10);
+
+        stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
+
+        rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, 12);
+
+        //grab 3rd and drop 3rd
+        armControl.autoArmMover(4950);
+        intake.setPower(1);
+        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, -0.3, 650);
+        stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
+        intake.setPower(0);
+        armControl.autoArmMover(1540);
+        intake.setPower(-1);
+        sleep(300);
+        intake.setPower(0);
+        armControl.autoArmMover(4950);
+        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, 0.3, 500);
+        stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
+        rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, -45);
+        slideControl.autoSlideMover(-3550);
+        slideControl.setServoPosition(-80);
+        sleep(850);
+        slideControl.setServoPosition(0);
+        slideControl.autoSlideMover(0);
+
+        rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, 0);
 
         telemetry.addData("Autonomous", "Complete");
         telemetry.update();
@@ -130,6 +192,11 @@ public class AutoV2 extends LinearOpMode {
         }
 
         stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
+    }
+
+    public void dontWaitForSlide(){
+        slideControl.setTargetPosition(0);
+
     }
 
     public void waitForSlideToReachTarget(SlideControl slideControl, double targetPosition) throws InterruptedException {

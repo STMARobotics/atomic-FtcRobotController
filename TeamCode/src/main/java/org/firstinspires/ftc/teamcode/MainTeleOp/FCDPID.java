@@ -31,7 +31,7 @@ public class FCDPID extends LinearOpMode {
     private DcMotor frontRight, rearRight, rearLeft, frontLeft;
     private IMU imu;
     boolean dpadDownPressed = false;
-
+    private double buttonPressed = 0;
 
 
     @Override
@@ -133,46 +133,80 @@ public class FCDPID extends LinearOpMode {
             double currentSlidePosition = slideControl.getCurrentPosition();
             if (gamepad2.left_stick_y > 0.1 || gamepad2.left_stick_y < -0.1) {
                 targetSlidePosition += gamepad2.left_stick_y * 30;
+                slideControl.setTargetPosition(targetSlidePosition);
             }
 
             if (gamepad2.right_stick_y > 0.1 || gamepad2.right_stick_y < -0.1) {
-                targetArmPosition += gamepad2.right_stick_y * 100;
+                targetArmPosition += gamepad2.right_stick_y * 70;
+                armControl.setPosition(targetArmPosition);
             }
 
 
             if (gamepad2.dpad_up) {
                 targetServoPosition = -10;
+                slideControl.setServoPosition(targetServoPosition);
             }
 
             if (gamepad2.dpad_right) {
                 targetServoPosition = 65;
+                slideControl.setServoPosition(targetServoPosition);
             }
 
             if (gamepad2.dpad_down) {
                 targetServoPosition = -80;
+                slideControl.setServoPosition(targetServoPosition);
             }
 
             if (gamepad2.y) {
                 targetSlidePosition = -3550;
+                slideControl.setTargetPosition(targetSlidePosition);
             }
 
             if (gamepad2.a) {
                 targetSlidePosition = 0;
+                slideControl.setTargetPosition(targetSlidePosition);
             }
 
             if (gamepad2.b) {
                 targetSlidePosition = -1820;
+                slideControl.setTargetPosition(targetSlidePosition);
+            }
+
+            if (gamepad2.x) {
+                buttonPressed = 1;
+                slideControl.autoDidntZero(buttonPressed);
+            } else {
+                buttonPressed = 0;
+                slideControl.autoDidntZero(buttonPressed);
+            }
+
+            if (buttonPressed == 0) {
+                if (targetSlidePosition > 0) {
+                    targetSlidePosition = 0;
+                    slideControl.setTargetPosition(targetSlidePosition);
+                }
+
+                else if (targetSlidePosition < -3800) {
+                    targetSlidePosition = -3800;
+                    slideControl.setTargetPosition(targetSlidePosition);
+                }
+
+                else if (targetSlidePosition > -5){
+                    slideControl.setSlidePower(0);
+                }
             }
 
             if (targetSlidePosition > 0) {
                 targetSlidePosition = 0;
+                slideControl.setTargetPosition(targetSlidePosition);
             }
 
             if (targetSlidePosition < -3800) {
                 targetSlidePosition = -3800;
+                slideControl.setTargetPosition(targetSlidePosition);
             }
 
-            if (currentSlidePosition > -10 || targetSlidePosition > -10){
+            if (targetSlidePosition > -5){
                 slideControl.setSlidePower(0);
             }
 
