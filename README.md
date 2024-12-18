@@ -20,5 +20,5 @@ Our code is designed to control our robot for various tasks and challenges in th
 
 ## Features
 
-- **Autonomous Mode**: Work in progress, will use limelight combined with an omnidirectional intake to hopefully score a 32 point auto.
-- **TeleOp Mode**: Manual control for drivers to operate the robot, still work in progress.
+- **Autonomous Mode**: We made an auto for each battery voltage so we are accurate every time, it scores 48 points accurately every time. (its time based, the actual code isnt pushed yet)
+- **TeleOp Mode**: Manual control for drivers to operate the robot, still work in progress but its pretty efficient.
