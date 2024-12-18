@@ -20,7 +20,7 @@ This repository contains the code developed by our team for the FIRST Tech Chall
 
 ## Mentors
 
-- **Merek's dad** - Helps with whatever, usually gives ideas, and points out things the team didn't notice.
+- **Merek's dad** - Helps with whatever, usually gives ideas, and points out things the team didn't notice
 
 - **Izzy Sp.'s** dad - Helps with ideas and portfolio(?)
 
