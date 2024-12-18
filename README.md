@@ -9,10 +9,24 @@ This repository contains the code developed by our team for the FIRST Tech Chall
 ## Team Members
 
 - **Owen R.** - Lead Developer, backup drivetrain driver, build team
-- **Ben A.** - Main drivetrain driver, head of build team
+
+- **Ben A.** - Main drivetrain driver, head of the build team
+
 - **Merek H.** - Lead CAD designer, main arm driver, build team
+
 - **Izzy Sc.** - backup arm driver, portfolio team, keeps the team on track
+
 - **Izzy Sp.** - backup drivetrain driver, portfolio team
+
+## Mentors
+
+- **Merek's dad** - Helps with whatever, usually gives ideas, and points out things the team didn't notice.
+
+- **Izzy Sp.'s** dad - Helps with ideas and portfolio(?)
+
+- **Owen R.'s** mom - She bringeth forth delectable and sweet treats.
+
+- **OSOWSKI** - Helped make the entire auto, helps cut metal for the build team, gives ideas
 
 ## Overview
 
@@ -20,5 +34,7 @@ Our code is designed to control our robot for various tasks and challenges in th
 
 ## Features
 
-- **Autonomous Mode**: We made an auto for each battery voltage so we are accurate every time, it scores 48 points accurately every time. (its time based, the actual code isnt pushed yet)
-- **TeleOp Mode**: Manual control for drivers to operate the robot, still work in progress but its pretty efficient.
+- **Autonomous Mode:** We made an auto for each battery voltage so we are accurate every time; it scores 48 points accurately every time. (It's time-based; the actual code isn't pushed yet.)
+
+- **TeleOp Mode:** Manual control for drivers to operate the robot, still a work in progress, but it's pretty efficient.
+
