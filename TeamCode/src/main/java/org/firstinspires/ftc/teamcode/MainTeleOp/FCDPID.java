@@ -31,6 +31,7 @@ public class FCDPID extends LinearOpMode {
     private DcMotor frontRight, rearRight, rearLeft, frontLeft;
     private IMU imu;
     boolean dpadDownPressed = false;
+    private double presetCycle;
 
 
 
@@ -164,6 +165,22 @@ public class FCDPID extends LinearOpMode {
                 targetSlidePosition = -1820;
             }
 
+            if (gamepad2.oldLeftBumper) {
+                presetCycle -= 1;
+            }
+
+            if (gampead2.oldRightBumper) {
+                presetCycle += 1;
+            }
+
+            if (presetCycle = < 1) {
+                presetCycle = 1;
+            }
+
+            if (presetCycle = > 4) {
+                presetCycle = 4;
+            }
+
             if (targetSlidePosition > 0) {
                 targetSlidePosition = 0;
             }
@@ -174,6 +191,18 @@ public class FCDPID extends LinearOpMode {
 
             if (currentSlidePosition > -10 || targetSlidePosition > -10){
                 slideControl.setSlidePower(0);
+            }
+
+
+
+            if (presetCycle = 1) {
+                targetSlideposition = placeholder;
+            } else if (presetCycle = 2) {
+                targetSlidePosition = placeholder;
+            } else if (presetCycle = 3) {
+                targetSlidePosition = placeholder;
+            } else if (presetCycle = 4) {
+                targetSlidePosition = placeholder;
             }
 
 
