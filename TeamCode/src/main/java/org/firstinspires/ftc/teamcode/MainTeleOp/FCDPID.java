@@ -31,7 +31,9 @@ public class FCDPID extends LinearOpMode {
     private DcMotor frontRight, rearRight, rearLeft, frontLeft;
     private IMU imu;
     boolean dpadDownPressed = false;
-    private double buttonPressed = 0;
+    private boolean isButtonPressed = false;
+    private double presetCycle = 0;
+    private boolean isArmBeingControlled;
 
 
     @Override
@@ -65,9 +67,12 @@ public class FCDPID extends LinearOpMode {
         if (isStopRequested()) return;
 
         slideControl.resetEncoder();
+        telemetry.addData("init", true);
+        telemetry.update();
 
         while (opModeIsActive()) {
-
+            telemetry.addData("started while", true);
+            telemetry.update();
             boolean currentButtonState = gamepad1.right_stick_button;
             if (currentButtonState && !lastButtonState) {
                 halfSpeed = !halfSpeed;
@@ -129,8 +134,8 @@ public class FCDPID extends LinearOpMode {
 //                frontLeftPower = 0;
 //            }
 
-
             double currentSlidePosition = slideControl.getCurrentPosition();
+
             if (gamepad2.left_stick_y > 0.1 || gamepad2.left_stick_y < -0.1) {
                 targetSlidePosition += gamepad2.left_stick_y * 30;
                 slideControl.setTargetPosition(targetSlidePosition);
@@ -141,6 +146,7 @@ public class FCDPID extends LinearOpMode {
                 armControl.setPosition(targetArmPosition);
             }
 
+            isArmBeingControlled = (Math.abs(gamepad2.left_stick_y) > 0.1);
 
             if (gamepad2.dpad_up) {
                 targetServoPosition = -10;
@@ -172,31 +178,43 @@ public class FCDPID extends LinearOpMode {
                 slideControl.setTargetPosition(targetSlidePosition);
             }
 
-            if (gamepad2.x) {
-                buttonPressed = 1;
-                slideControl.autoDidntZero(buttonPressed);
-            } else {
-                buttonPressed = 0;
-                slideControl.autoDidntZero(buttonPressed);
+            if (gamepad2.left_bumper) {
+                presetCycle -= 1;
             }
 
-            if (buttonPressed == 0) {
-                if (targetSlidePosition > 0) {
-                    targetSlidePosition = 0;
-                    slideControl.setTargetPosition(targetSlidePosition);
-                }
-
-                else if (targetSlidePosition < -3800) {
-                    targetSlidePosition = -3800;
-                    slideControl.setTargetPosition(targetSlidePosition);
-                }
-
-                else if (targetSlidePosition > -5){
-                    slideControl.setSlidePower(0);
-                }
+            if (gamepad2.right_bumper) {
+                presetCycle += 1;
             }
 
-            if (targetSlidePosition > 0) {
+            if (presetCycle < 1) {
+                presetCycle = 1;
+            }
+
+            if (presetCycle > 4) {
+                presetCycle = 4;
+            }
+
+            if (presetCycle == 1 && !isArmBeingControlled) {
+                targetArmPosition = 0;
+                armControl.setPosition(targetArmPosition);
+            }
+
+            if (presetCycle == 2 && !isArmBeingControlled) {
+                targetArmPosition = 1000;
+                armControl.setPosition(targetArmPosition);
+            }
+
+            if (presetCycle == 3 && !isArmBeingControlled) {
+                targetArmPosition = 2000;
+                armControl.setPosition(targetArmPosition);
+            }
+
+            if (presetCycle == 4 && !isArmBeingControlled) {
+                targetArmPosition = 3000;
+                armControl.setPosition(targetArmPosition);
+            }
+
+            if (targetSlidePosition > 1) {
                 targetSlidePosition = 0;
                 slideControl.setTargetPosition(targetSlidePosition);
             }
@@ -206,37 +224,37 @@ public class FCDPID extends LinearOpMode {
                 slideControl.setTargetPosition(targetSlidePosition);
             }
 
-            if (targetSlidePosition > -5){
+            if (targetSlidePosition > 1) {
                 slideControl.setSlidePower(0);
-            }
 
 
-            frontRight.setPower(frontRightPower);
-            rearRight.setPower(rearRightPower);
-            rearLeft.setPower(rearLeftPower);
-            frontLeft.setPower(frontLeftPower);
-            intake.setPower(intakePower);
+                frontRight.setPower(frontRightPower);
+                rearRight.setPower(rearRightPower);
+                rearLeft.setPower(rearLeftPower);
+                frontLeft.setPower(frontLeftPower);
+                intake.setPower(intakePower);
 
 //            slideControl.setTargetPosition(targetSlidePosition);
 //            slideControl.setServoPosition(targetServoPosition);
-            armControl.setPosition(targetArmPosition);
-            armControl.update();
-            slideControl.update();
+                armControl.setPosition(targetArmPosition);
+                armControl.update();
+                slideControl.update();
 
-            String emptyVariable = " ";
+                String emptyVariable = " ";
 
-            telemetry.addData("Half-Speed Mode", halfSpeed ? "ON" : "OFF");
-            telemetry.addData("", emptyVariable);
-            telemetry.addData("Arm Target Position", armControl.getArmTargetPosition());
-            telemetry.addData("Arm Position", armControl.getArmPosition());
-            telemetry.addData("", emptyVariable);
-            telemetry.addData("Slide Target Position", slideControl.getTargetPosition());
-            telemetry.addData("Slide Position", slideControl.getCurrentPosition());
-            telemetry.addData("Servo Position", targetServoPosition);
-            telemetry.addData("", emptyVariable);
-            telemetry.addData("Heading", botHeading);
-            telemetry.addData("", emptyVariable);
-            telemetry.update();
+                telemetry.addData("Half-Speed Mode", halfSpeed ? "ON" : "OFF");
+                telemetry.addData("", emptyVariable);
+                telemetry.addData("Arm Target Position", armControl.getArmTargetPosition());
+                telemetry.addData("Arm Position", armControl.getArmPosition());
+                telemetry.addData("", emptyVariable);
+                telemetry.addData("Slide Target Position", slideControl.getTargetPosition());
+                telemetry.addData("Slide Position", slideControl.getCurrentPosition());
+                telemetry.addData("Servo Position", targetServoPosition);
+                telemetry.addData("", emptyVariable);
+                telemetry.addData("Heading", botHeading);
+                telemetry.addData("", emptyVariable);
+                telemetry.update();
+            }
         }
     }
 }

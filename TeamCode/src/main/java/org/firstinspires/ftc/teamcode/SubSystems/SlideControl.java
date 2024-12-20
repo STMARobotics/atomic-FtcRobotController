@@ -90,13 +90,6 @@ public class SlideControl {
     }
 
 
-    public void autoDidntZero(double isButtonPressed){
-        slide.setPower(-1);
-        if (isButtonPressed == 1){
-            resetEncoder();
-        }
-    }
-
     public void setPower(double setPower){
         slide.setPower(setPower);
     }
