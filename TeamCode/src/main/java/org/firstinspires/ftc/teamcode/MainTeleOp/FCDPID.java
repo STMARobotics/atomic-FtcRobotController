@@ -69,8 +69,6 @@ public class FCDPID extends LinearOpMode {
         telemetry.update();
 
         while (opModeIsActive()) {
-            telemetry.addData("started while", true);
-            telemetry.update();
             boolean currentButtonState = gamepad1.right_stick_button;
             if (currentButtonState && !lastButtonState) {
                 halfSpeed = !halfSpeed;
