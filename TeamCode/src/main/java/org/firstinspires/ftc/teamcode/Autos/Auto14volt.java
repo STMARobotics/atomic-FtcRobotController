@@ -12,13 +12,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.SubSystems.ArmControl;
-import org.firstinspires.ftc.teamcode.SubSystems.AutoSubsystem;
 import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
 
 @Autonomous
 public class Auto14volt extends LinearOpMode {
 
-    private AutoSubsystem autoSubsystem;
     private ArmControl armControl;
     private SlideControl slideControl;
     private IMU imu;

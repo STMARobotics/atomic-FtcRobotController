@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.SubSystems.ArmControl;
-import org.firstinspires.ftc.teamcode.SubSystems.AutoSubsystem;
 import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
 import org.firstinspires.ftc.teamcode.SubSystems.MainSubsystem;
 
@@ -24,7 +23,6 @@ public class FCDPID extends LinearOpMode {
     private ArmControl armControl;
     private SlideControl slideControl;
     private MainSubsystem mainSubsystem;
-    private AutoSubsystem autoSubsystem;
     double targetSlidePosition;
     private double targetArmPosition = 0;
     double targetServoPosition = 65;
@@ -226,6 +224,7 @@ public class FCDPID extends LinearOpMode {
 
             if (targetSlidePosition > 1) {
                 slideControl.setSlidePower(0);
+            }
 
 
                 frontRight.setPower(frontRightPower);
@@ -257,4 +256,3 @@ public class FCDPID extends LinearOpMode {
             }
         }
     }
-}
