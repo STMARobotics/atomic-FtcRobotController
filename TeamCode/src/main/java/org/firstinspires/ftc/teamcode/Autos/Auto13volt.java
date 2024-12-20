@@ -79,6 +79,8 @@ public class Auto13volt extends LinearOpMode {
         armControl.autoArmMover(4950);
         slideControl.autoSlideMover(-10);
 
+        //once slide is going start moving
+
         //rotate to pickup 2nd
         rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, -12);
 
@@ -91,6 +93,7 @@ public class Auto13volt extends LinearOpMode {
         intake.setPower(-1);
         sleep(300);
         intake.setPower(0);
+        //in parallel with moving pls\/\/\/
         armControl.autoArmMover(4950);
         slideControl.setServoPosition(0);
 
@@ -106,7 +109,9 @@ public class Auto13volt extends LinearOpMode {
         slideControl.setServoPosition(-80);
         sleep(850);
         slideControl.setServoPosition(0);
+        //in parallel with moving\/\/\/
         slideControl.autoSlideMover(-10);
+        //in parallel with moving/\/\/\
 
         stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
 
@@ -118,11 +123,13 @@ public class Auto13volt extends LinearOpMode {
         moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, -0.3, 650);
         stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
         intake.setPower(0);
+        //drop in slide basket at the same time as moving to the high bucket
         armControl.autoArmMover(1540);
         intake.setPower(-1);
         sleep(300);
         intake.setPower(0);
         armControl.autoArmMover(4950);
+        //move to 3rd basket?
         moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, 0.3, 500);
         stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
         rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, -45);
@@ -130,6 +137,7 @@ public class Auto13volt extends LinearOpMode {
         slideControl.setServoPosition(-80);
         sleep(850);
         slideControl.setServoPosition(0);
+        //do in parallel with rotating\/\/\/
         slideControl.autoSlideMover(0);
 
         rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, 0);
