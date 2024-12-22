@@ -22,7 +22,7 @@ public class MainSubsystem {
     private VoltageSensor batterySensor;
     private HardwareMap hardwareMap;
     private boolean isCalibrated = false;
-    private double armError
+    private double armError;
 
     public MainSubsystem(HardwareMap hardwareMap) {
         this.hardwareMap = hardwareMap;
@@ -46,7 +46,7 @@ public class MainSubsystem {
 
     public double getArmError() {
         // return armControl.getArmTargetPosition() - armControl.getArmPosition();
-        return Math.Abs(armControl.getArmTargetPosition) - Math.Abs(armControl.getArmPosition);
+        return Math.abs(armControl.getArmTargetPosition()) - Math.abs(armControl.getArmPosition());
     }
 
     public double getSlidePosition() {
@@ -59,7 +59,7 @@ public class MainSubsystem {
 
     public double getSlideError() {
         // return slideControl.getTargetPosition() - slideControl.getCurrentPosition();
-        return Math.Abs(slideControl.getTargetPosition) - Math.Abs(slideControl.getCurrentPosition);
+        return Math.abs(slideControl.getTargetPosition()) - Math.abs(slideControl.getCurrentPosition());
     }
 
     public double getIntakeServoPower() {
@@ -128,7 +128,7 @@ public class MainSubsystem {
 
     public void fixArmErrorBeta() {
         armError = getArmError();
-        armControl.setPosition(getArmTargetPosition - armError);
+        armControl.setPosition(getArmTargetPosition() - armError);
         armControl.update();
     }
 }

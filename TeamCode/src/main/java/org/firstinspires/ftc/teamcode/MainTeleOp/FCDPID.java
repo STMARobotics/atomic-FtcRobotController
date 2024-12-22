@@ -30,8 +30,13 @@ public class FCDPID extends LinearOpMode {
     private IMU imu;
     boolean dpadDownPressed = false;
     private boolean isButtonPressed = false;
-    private double presetCycle = 0;
+    private int presetCycle = 0;
     private boolean isArmBeingControlled;
+    private boolean isLeftBumperPressed;
+    private boolean isRightBumperPressed;
+    private double lastPresetCycle = 0;
+    private boolean lastLeftBumperState = false;
+    private boolean lastRightBumperState = false;
 
 
     @Override
@@ -142,7 +147,7 @@ public class FCDPID extends LinearOpMode {
                 armControl.setPosition(targetArmPosition);
             }
 
-            isArmBeingControlled = (Math.abs(gamepad2.left_stick_y) > 0.1);
+            isArmBeingControlled = (Math.abs(gamepad2.right_stick_y) > 0.1);
 
             if (gamepad2.dpad_up) {
                 targetServoPosition = -10;
@@ -165,7 +170,7 @@ public class FCDPID extends LinearOpMode {
             }
 
             if (gamepad2.a) {
-                targetSlidePosition = 0;
+                targetSlidePosition = -5;
                 slideControl.setTargetPosition(targetSlidePosition);
             }
 
@@ -174,13 +179,17 @@ public class FCDPID extends LinearOpMode {
                 slideControl.setTargetPosition(targetSlidePosition);
             }
 
-            if (gamepad2.left_bumper) {
+            if (gamepad2.right_bumper && !lastRightBumperState) {
                 presetCycle -= 1;
             }
 
-            if (gamepad2.right_bumper) {
+            if (gamepad2.left_bumper && !lastLeftBumperState) {
                 presetCycle += 1;
             }
+
+            lastLeftBumperState = gamepad2.left_bumper;
+            lastRightBumperState = gamepad2.right_bumper;
+
 
             if (presetCycle < 1) {
                 presetCycle = 1;
@@ -190,25 +199,33 @@ public class FCDPID extends LinearOpMode {
                 presetCycle = 4;
             }
 
-            if (presetCycle == 1 && !isArmBeingControlled) {
-                targetArmPosition = 0;
+            if (presetCycle != lastPresetCycle && !isArmBeingControlled) {
+                switch (presetCycle) {
+                    case 0:
+                        telemetry.addData("preset", "none selected");
+                        telemetry.update();
+                        break;
+                    case 1:
+                        targetArmPosition = 0;
+                        break;
+                    case 2:
+                        targetArmPosition = -850;
+                        break;
+                    case 3:
+                        targetArmPosition = -1600;
+                        break;
+                    case 4:
+                        targetArmPosition = -3350;
+                        break;
+                    default:
+                        telemetry.addData("preset", "none selected");
+                        telemetry.update();
+                        break;
+                }
                 armControl.setPosition(targetArmPosition);
+                lastPresetCycle = presetCycle; // Update the lastPresetCycle after acting on it.
             }
 
-            if (presetCycle == 2 && !isArmBeingControlled) {
-                targetArmPosition = 1000;
-                armControl.setPosition(targetArmPosition);
-            }
-
-            if (presetCycle == 3 && !isArmBeingControlled) {
-                targetArmPosition = 2000;
-                armControl.setPosition(targetArmPosition);
-            }
-
-            if (presetCycle == 4 && !isArmBeingControlled) {
-                targetArmPosition = 3000;
-                armControl.setPosition(targetArmPosition);
-            }
 
             if (targetSlidePosition > 1) {
                 targetSlidePosition = 0;

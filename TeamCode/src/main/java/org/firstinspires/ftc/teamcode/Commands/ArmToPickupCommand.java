@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.Commands;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+
+import com.arcrobotics.ftclib.command.Command;
+import com.arcrobotics.ftclib.command.Subsystem;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -11,15 +15,22 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.Autos.Auto13volt;
 import org.firstinspires.ftc.teamcode.SubSystems.ArmControl;
+import org.firstinspires.ftc.teamcode.SubSystems.MainSubsystem;
 import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
 
+import java.util.Collections;
+import java.util.Set;
 
-public class DropInSlideBasketCommand extends Command {
+
+public class ArmToPickupCommand implements Command {
     private ArmControl armControl;
     private SlideControl slideControl;
     private MainSubsystem mainSubsystem;
     private Auto13volt auto13volt;
+    private IMU imu;
+
 
     @Override
     public void initialize() {
@@ -27,6 +38,7 @@ public class DropInSlideBasketCommand extends Command {
         DcMotor rearRight = hardwareMap.dcMotor.get("rearRight");
         DcMotor rearLeft = hardwareMap.dcMotor.get("rearLeft");
         DcMotor frontLeft = hardwareMap.dcMotor.get("frontLeft");
+        final DcMotorEx slideMotor = hardwareMap.get(DcMotorEx.class, "slide");
 
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -36,7 +48,6 @@ public class DropInSlideBasketCommand extends Command {
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         rearRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        DcMotorEx slideMotor = hardwareMap.get(DcMotorEx.class, "slide");
         Servo slideServo = hardwareMap.get(Servo.class, "servo");
         final CRServo intake = hardwareMap.get(CRServo.class, "intake");
 
@@ -55,20 +66,21 @@ public class DropInSlideBasketCommand extends Command {
 
     @Override
     public void execute() {
-        armControl.autoArmMover(1540);
-        intake.setPower(-1);
-        sleep(300);
-        intake.setPower(0);
+        armControl.autoArmMover(4950);
     }
 
-    @Override
     public void end() {
-        drivetrain.stop();
     }
 
     @Override
     public boolean isFinished() {
         slideControl.update();
         armControl.update();
+        return false;
+    }
+
+    @Override
+    public Set<Subsystem> getRequirements() {
+        return Collections.emptySet();
     }
 }
