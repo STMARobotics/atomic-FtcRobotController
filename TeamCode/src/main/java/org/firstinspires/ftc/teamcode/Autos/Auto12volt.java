@@ -200,6 +200,7 @@ public class Auto12volt extends LinearOpMode {
     public void waitForSlideToReachTarget(SlideControl slideControl, double targetPosition) throws InterruptedException {
         while (opModeIsActive() && Math.abs(slideControl.getCurrentPosition() - targetPosition) > 1) {
             slideControl.update();
+
             telemetry.addData("Current Slide Position", slideControl.getCurrentPosition());
             telemetry.addData("Target Slide Position", targetPosition);
             telemetry.addData("Slide Error", Math.abs(slideControl.getCurrentPosition() - targetPosition));

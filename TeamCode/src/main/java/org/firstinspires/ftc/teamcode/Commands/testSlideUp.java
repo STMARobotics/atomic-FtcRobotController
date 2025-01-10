@@ -8,28 +8,36 @@ import org.firstinspires.ftc.teamcode.SubSystems.MainSubsystem;
 import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
 
 public class testSlideUp extends CommandBase {
-    private ArmControl armControl;
-    private SlideControl slideControl;
-    private MainSubsystem mainSubsystem;
+    private final SlideControl slideControl;
+    private final MainSubsystem mainSubsystem;
 
     public testSlideUp(ArmControl armControl, SlideControl slideControl, MainSubsystem mainSubsystem) {
-        this.armControl = armControl;
         this.slideControl = slideControl;
         this.mainSubsystem = mainSubsystem;
 
-        addRequirements((Subsystem) armControl, (Subsystem) slideControl, (Subsystem) mainSubsystem);
-    }
-
-    public testSlideUp(testSlideUp testSlideUp) {
+        addRequirements((Subsystem) slideControl, (Subsystem) mainSubsystem);
     }
 
     @Override
     public void initialize() {
+
+    }
+
+    @Override
+    public void execute() {
         slideControl.autoSlideMover(-3550);
     }
 
     @Override
     public boolean isFinished() {
-        return true;
+        if (mainSubsystem.getSlideError() < 10){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public void end(boolean interrupted) {
     }
 }

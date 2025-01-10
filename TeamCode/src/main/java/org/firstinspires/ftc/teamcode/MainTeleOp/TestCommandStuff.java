@@ -1,44 +1,50 @@
 package org.firstinspires.ftc.teamcode.MainTeleOp;
 
-import com.arcrobotics.ftclib.command.ParallelCommandGroup;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.teamcode.Commands.testServoMove;
-import org.firstinspires.ftc.teamcode.Commands.testSlideUp;
-import org.firstinspires.ftc.teamcode.SubSystems.ArmControl;
-import org.firstinspires.ftc.teamcode.SubSystems.MainSubsystem;
-import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
-import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.CommandOpMode;
+import com.arcrobotics.ftclib.command.ParallelCommandGroup;
+import com.arcrobotics.ftclib.command.button.GamepadButton;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
 
-@TeleOp
-public class TestCommandStuff extends LinearOpMode {
-    private testServoMove testServoMove;
-    private testSlideUp testSlideUp;
+import org.firstinspires.ftc.teamcode.Commands.testSlideUp;
+import org.firstinspires.ftc.teamcode.Commands.testMoveCommand;
+import org.firstinspires.ftc.teamcode.SubSystems.ArmControl;
+import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
+import org.firstinspires.ftc.teamcode.SubSystems.MainSubsystem;
+
+@TeleOp(name = "My TeleOp")
+public class TestCommandStuff extends CommandOpMode {
+    private GamepadEx driverOp;
+    private testSlideUp command1;
+    private testMoveCommand command2;
+
+    // Declare subsystems
     private ArmControl armControl;
     private SlideControl slideControl;
     private MainSubsystem mainSubsystem;
 
     @Override
-    public void runOpMode() throws InterruptedException {
-        // Initialize commands
-        testServoMove = new testServoMove(armControl, slideControl, mainSubsystem);
-        testSlideUp = new testSlideUp(armControl, slideControl, mainSubsystem);
+    public void initialize() {
+        // Initialize gamepad
+        driverOp = new GamepadEx(gamepad1);
 
-        CommandScheduler scheduler = CommandScheduler.getInstance();
+        // Initialize subsystems
+        armControl = new ArmControl(hardwareMap);
+        slideControl = new SlideControl(hardwareMap);
+        mainSubsystem = new MainSubsystem(hardwareMap);
 
-        ParallelCommandGroup parallelCommands = new ParallelCommandGroup(
-                new testServoMove(testServoMove),
-                new testSlideUp(testSlideUp)
-        );
+        // Initialize commands with subsystems
+        command1 = new testSlideUp(armControl, slideControl, mainSubsystem);
+        command2 = new testMoveCommand(slideControl, armControl, mainSubsystem);
 
-        waitForStart();
-        if (isStopRequested()) return;
-
-        while (opModeIsActive()) {
-
-            if (gamepad1.a) {
-                scheduler.schedule(parallelCommands);
-            }
-        }
+        // Create button binding
+        new GamepadButton(driverOp, GamepadKeys.Button.A)
+                .whenPressed(
+                        new ParallelCommandGroup(
+                                command1,
+                                command2
+                        )
+                );
     }
 }
