@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.SubSystems;
 
 import android.annotation.SuppressLint;
 
+import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -16,18 +17,23 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Date;
 
-public class MainSubsystem {
+public class MainSubsystem extends SubsystemBase {
 
     private final ArmControl armControl;
     private final SlideControl slideControl;
     private final IMU imu;
     private final VoltageSensor batterySensor;
 
+    private final DcMotor frontRight;
+    private final DcMotor rearRight;
+    private final DcMotor rearLeft;
+    private final DcMotor frontLeft;
+
     public MainSubsystem(HardwareMap hardwareMap) {
-        DcMotor frontRight = hardwareMap.dcMotor.get("frontRight");
-        DcMotor rearRight = hardwareMap.dcMotor.get("rearRight");
-        DcMotor rearLeft = hardwareMap.dcMotor.get("rearLeft");
-        DcMotor frontLeft = hardwareMap.dcMotor.get("frontLeft");
+        frontRight = hardwareMap.dcMotor.get("frontRight");
+        rearRight = hardwareMap.dcMotor.get("rearRight");
+        rearLeft = hardwareMap.dcMotor.get("rearLeft");
+        frontLeft = hardwareMap.dcMotor.get("frontLeft");
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -79,7 +85,7 @@ public class MainSubsystem {
         slideControl.resetEncoder();
     }
 
-    public void moveDrivetrain(DcMotor frontLeft, DcMotor rearLeft, DcMotor frontRight, DcMotor rearRight, double power, int duration) {
+    public void moveDrivetrain(double power, int duration) {
         frontLeft.setPower(power);
         rearLeft.setPower(power);
         frontRight.setPower(power);
@@ -87,7 +93,7 @@ public class MainSubsystem {
         safeSleep(duration);
     }
 
-    public void stopDrivetrain(DcMotor frontLeft, DcMotor rearLeft, DcMotor frontRight, DcMotor rearRight) {
+    public void stopDrivetrain() {
         frontLeft.setPower(0);
         rearLeft.setPower(0);
         frontRight.setPower(0);
@@ -102,7 +108,7 @@ public class MainSubsystem {
         }
     }
 
-    public void rotateToAngle(DcMotor frontLeft, DcMotor rearLeft, DcMotor frontRight, DcMotor rearRight, double targetAngle) {
+    public void rotateToAngle(double targetAngle) {
         double fieldOffset = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         double currentAngle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) - fieldOffset;
         double turnPower;
@@ -136,7 +142,7 @@ public class MainSubsystem {
 
         }
 
-        stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
+        stopDrivetrain();
     }
 
     @SuppressLint("DefaultLocale")

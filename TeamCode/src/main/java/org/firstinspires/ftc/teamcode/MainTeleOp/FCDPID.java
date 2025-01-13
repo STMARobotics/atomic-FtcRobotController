@@ -25,7 +25,7 @@ public class FCDPID extends LinearOpMode {
     private DcMotor rearRight;
     private DcMotor rearLeft;
     private DcMotor frontLeft;
-    private DcMotor frontRight
+    private DcMotor frontRight;
     private IMU imu;
     private int presetCycle = 0;
     private double lastPresetCycle = 0;
