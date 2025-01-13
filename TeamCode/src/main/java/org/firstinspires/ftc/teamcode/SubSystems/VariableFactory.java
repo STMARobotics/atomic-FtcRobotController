@@ -7,58 +7,58 @@ import java.lang.reflect.Field;
 public class VariableFactory extends SubsystemBase {
 
     // 12V Auto Variables
-    private double moveTo1stBasketDuration1_12v = 550;
-    private double moveTo1stBasketPower1_12v = -0.6;
-    private double moveTo1stBasketPower2_12v = 0.6;
-    private double moveto1stBasketDuration2_12v = 750;
-    private double rotateToDrop1stAngle_12v = -45;
-    private double rotateToPickup2ndAngle_12v = -12;
-    private double moveToPickup2ndDuration_12v = 750;
-    private double moveToPickup2ndPower_12v = -0.3;
-    private double moveToDrop2ndDuration_12v = 500;
-    private double rotateToDrop2ndAngle_12v = -45;
-    private double moveToDrop2ndPower_12v = 0.3;
-    private double rotateToPickup3rdAngle_12v = 12;
-    private double moveToPickup3rdDuration_12v = 650;
-    private double moveToPickup3rdPower_12v = -0.3;
-    private double moveToDrop3rdDuration_12v = 500;
-    private double rotateToDrop3rdAngle_12v = -45;
+    private final double moveTo1stBasketDuration1_12v = 550;
+    private final double moveTo1stBasketPower1_12v = -0.6;
+    private final double moveTo1stBasketPower2_12v = 0.6;
+    private final double moveto1stBasketDuration2_12v = 750;
+    private final double rotateToDrop1stAngle_12v = -45;
+    private final double rotateToPickup2ndAngle_12v = -12;
+    private final double moveToPickup2ndDuration_12v = 750;
+    private final double moveToPickup2ndPower_12v = -0.3;
+    private final double moveToDrop2ndDuration_12v = 500;
+    private final double rotateToDrop2ndAngle_12v = -45;
+    private final double moveToDrop2ndPower_12v = 0.3;
+    private final double rotateToPickup3rdAngle_12v = 12;
+    private final double moveToPickup3rdDuration_12v = 650;
+    private final double moveToPickup3rdPower_12v = -0.3;
+    private final double moveToDrop3rdDuration_12v = 500;
+    private final double rotateToDrop3rdAngle_12v = -45;
 
     // 13V Auto Variables
-    private double moveTo1stBasketDuration1_13v = 550;
-    private double moveTo1stBasketPower_13v = -0.6;
-    private double moveTo1stBasketPower2_13v = 0.6;
-    private double moveto1stBasketDuration2_13v = 750;
-    private double rotateToDrop1stAngle_13v = -45;
-    private double rotateToPickup2ndAngle_13v = -12;
-    private double moveToPickup2ndDuration_13v = 750;
-    private double moveToPickup2ndPower_13v = -0.3;
-    private double moveToDrop2ndDuration_13v = 500;
-    private double rotateToDrop2ndAngle_13v = -45;
-    private double moveToDrop2ndPower_13v = 0.3;
-    private double rotateToPickup3rdAngle_13v = 10;
-    private double moveToPickup3rdDuration_13v = 650;
-    private double moveToPickup3rdPower_13v = -0.3;
-    private double moveToDrop3rdDuration_13v = 500;
-    private double rotateToDrop3rdAngle_13v = -45;
+    private final double moveTo1stBasketDuration1_13v = 550;
+    private final double moveTo1stBasketPower_13v = -0.6;
+    private final double moveTo1stBasketPower2_13v = 0.6;
+    private final double moveto1stBasketDuration2_13v = 750;
+    private final double rotateToDrop1stAngle_13v = -45;
+    private final double rotateToPickup2ndAngle_13v = -12;
+    private final double moveToPickup2ndDuration_13v = 750;
+    private final double moveToPickup2ndPower_13v = -0.3;
+    private final double moveToDrop2ndDuration_13v = 500;
+    private final double rotateToDrop2ndAngle_13v = -45;
+    private final double moveToDrop2ndPower_13v = 0.3;
+    private final double rotateToPickup3rdAngle_13v = 10;
+    private final double moveToPickup3rdDuration_13v = 650;
+    private final double moveToPickup3rdPower_13v = -0.3;
+    private final double moveToDrop3rdDuration_13v = 500;
+    private final double rotateToDrop3rdAngle_13v = -45;
 
     // 14V Auto Variables
-    private double moveTo1stBasketDuration1_14v = 400;
-    private double moveTo1stBasketPower_14v = -0.6;
-    private double moveTo1stBasketPower2_14v = 0.6;
-    private double moveto1stBasketDuration2_14v = 625;
-    private double rotateToDrop1stAngle_14v = -45;
-    private double rotateToPickup2ndAngle_14v = -11;
-    private double moveToPickup2ndDuration_14v = 750;
-    private double moveToPickup2ndPower_14v = -0.3;
-    private double moveToDrop2ndDuration_14v = 500;
-    private double rotateToDrop2ndAngle_14v = -45;
-    private double moveToDrop2ndPower_14v = 0.3;
-    private double rotateToPickup3rdAngle_14v = 12;
-    private double moveToPickup3rdDuration_14v = 650;
-    private double moveToPickup3rdPower_14v = -0.3;
-    private double moveToDrop3rdDuration_14v = 500;
-    private double rotateToDrop3rdAngle_14v = -45;
+    private final double moveTo1stBasketDuration1_14v = 400;
+    private final double moveTo1stBasketPower_14v = -0.6;
+    private final double moveTo1stBasketPower2_14v = 0.6;
+    private final double moveto1stBasketDuration2_14v = 625;
+    private final double rotateToDrop1stAngle_14v = -45;
+    private final double rotateToPickup2ndAngle_14v = -11;
+    private final double moveToPickup2ndDuration_14v = 750;
+    private final double moveToPickup2ndPower_14v = -0.3;
+    private final double moveToDrop2ndDuration_14v = 500;
+    private final double rotateToDrop2ndAngle_14v = -45;
+    private final double moveToDrop2ndPower_14v = 0.3;
+    private final double rotateToPickup3rdAngle_14v = 12;
+    private final double moveToPickup3rdDuration_14v = 650;
+    private final double moveToPickup3rdPower_14v = -0.3;
+    private final double moveToDrop3rdDuration_14v = 500;
+    private final double rotateToDrop3rdAngle_14v = -45;
 
     //im so proud of this its literally gonna work
 

@@ -7,12 +7,10 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.SubSystems.VariableFactory;
 import org.firstinspires.ftc.teamcode.SubSystems.MainSubsystem;
 
 public class RotateZero extends CommandBase {
-    private MainSubsystem mainSubsystem;
-    private VariableFactory variableFactory;
+    private final MainSubsystem mainSubsystem;
     private HardwareMap hardwareMap;
     private DcMotor frontRight;
     private DcMotor rearRight;
@@ -67,5 +65,25 @@ public class RotateZero extends CommandBase {
     public void end(boolean interrupted) {
         mainSubsystem.stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
         isMoving = false;
+    }
+
+    public void setRearLeft(DcMotor rearLeft) {
+        this.rearLeft = rearLeft;
+    }
+
+    public void setFrontRight(DcMotor frontRight) {
+        this.frontRight = frontRight;
+    }
+
+    public void setHardwareMap(HardwareMap hardwareMap) {
+        this.hardwareMap = hardwareMap;
+    }
+
+    public void setRearRight(DcMotor rearRight) {
+        this.rearRight = rearRight;
+    }
+
+    public void setFrontLeft(DcMotor frontLeft) {
+        this.frontLeft = frontLeft;
     }
 }

@@ -1,17 +1,12 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class ServoSubsystemForAuto {
-    private Servo servo;
+    private final Servo servo;
 
-    public ServoSubsystemForAuto(DcMotorEx slide, Servo servo) {
+    public ServoSubsystemForAuto(Servo servo) {
         this.servo = servo;
-    }
-
-    public ServoSubsystemForAuto(HardwareMap hardwareMap) {
     }
 
 

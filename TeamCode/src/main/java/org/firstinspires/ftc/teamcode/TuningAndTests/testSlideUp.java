@@ -17,10 +17,10 @@ public class testSlideUp extends CommandBase {
         addRequirements((Subsystem) slideControl, (Subsystem) mainSubsystem);
     }
 
-    @Override
-    public void initialize() {
-
-    }
+//    @Override
+//    public void initialize() {
+//
+//    }
 
     @Override
     public void execute() {
@@ -29,14 +29,10 @@ public class testSlideUp extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        if (mainSubsystem.getSlideError() < 10){
-            return true;
-        } else {
-            return false;
-        }
+        return mainSubsystem.getSlideError() < 10;
     }
 
-    @Override
-    public void end(boolean interrupted) {
-    }
+//    @Override
+//    public void end(boolean interrupted) {
+//    }
 }

@@ -11,8 +11,8 @@ import org.firstinspires.ftc.teamcode.SubSystems.VariableFactory;
 import org.firstinspires.ftc.teamcode.SubSystems.MainSubsystem;
 
 public class Drop2nd extends CommandBase {
-    private MainSubsystem mainSubsystem;
-    private VariableFactory variableFactory;
+    private final MainSubsystem mainSubsystem;
+    private final VariableFactory variableFactory;
     private HardwareMap hardwareMap;
     private DcMotor frontRight;
     private DcMotor rearRight;
@@ -22,8 +22,9 @@ public class Drop2nd extends CommandBase {
     private double duration;
     private final ElapsedTime timer;
 
-    public Drop2nd(MainSubsystem mainSubsystem) {
+    public Drop2nd(MainSubsystem mainSubsystem, VariableFactory variableFactory) {
         this.mainSubsystem = mainSubsystem;
+        this.variableFactory = variableFactory;
         DcMotor frontRight = hardwareMap.dcMotor.get("frontRight");
         DcMotor rearRight = hardwareMap.dcMotor.get("rearRight");
         DcMotor rearLeft = hardwareMap.dcMotor.get("rearLeft");
@@ -68,4 +69,25 @@ public class Drop2nd extends CommandBase {
         mainSubsystem.stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
         isMoving = false;
     }
+
+    public void setHardwareMap(HardwareMap hardwareMap) {
+        this.hardwareMap = hardwareMap;
+    }
+
+    public void setFrontRight(DcMotor frontRight) {
+        this.frontRight = frontRight;
+    }
+
+    public void setRearRight(DcMotor rearRight) {
+        this.rearRight = rearRight;
+    }
+
+    public void setRearLeft(DcMotor rearLeft) {
+        this.rearLeft = rearLeft;
+    }
+
+    public void setFrontLeft(DcMotor frontLeft) {
+        this.frontLeft = frontLeft;
+    }
+
 }

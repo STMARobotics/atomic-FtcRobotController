@@ -13,34 +13,27 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.SubSystems.ArmControl;
 import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
-import org.firstinspires.ftc.teamcode.SubSystems.MainSubsystem;
 
 @TeleOp
 public class FCDPID extends LinearOpMode {
     private boolean halfSpeed = false;
     private boolean lastButtonState = false;
     private double fieldOffset = 0;
-    private ArmControl armControl;
-    private SlideControl slideControl;
-    private MainSubsystem mainSubsystem;
     double targetSlidePosition;
     private double targetArmPosition = 0;
     double targetServoPosition = 65;
-    private DcMotor frontRight, rearRight, rearLeft, frontLeft;
+    private DcMotor rearRight;
+    private DcMotor rearLeft;
+    private DcMotor frontLeft;
     private IMU imu;
-    boolean dpadDownPressed = false;
-    private boolean isButtonPressed = false;
     private int presetCycle = 0;
-    private boolean isArmBeingControlled;
-    private boolean isLeftBumperPressed;
-    private boolean isRightBumperPressed;
     private double lastPresetCycle = 0;
     private boolean lastLeftBumperState = false;
     private boolean lastRightBumperState = false;
 
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
         final DcMotor frontRight = hardwareMap.dcMotor.get("frontRight");
         final DcMotor rearRight = hardwareMap.dcMotor.get("rearRight");
         final DcMotor rearLeft = hardwareMap.dcMotor.get("rearLeft");
@@ -52,7 +45,7 @@ public class FCDPID extends LinearOpMode {
         final CRServo intake = hardwareMap.get(CRServo.class, "intake");
         final DcMotorEx slideMotor = hardwareMap.get(DcMotorEx.class, "slide");
         final Servo slideServo = hardwareMap.get(Servo.class, "servo");
-        slideControl = new SlideControl(slideMotor, slideServo);
+        SlideControl slideControl = new SlideControl(slideMotor, slideServo);
 
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         rearRight.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -63,7 +56,7 @@ public class FCDPID extends LinearOpMode {
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
         imu.initialize(parameters);
 
-        armControl = new ArmControl(hardwareMap);
+        ArmControl armControl = new ArmControl(hardwareMap);
         armControl.resetZero();
 
         waitForStart();
@@ -121,7 +114,7 @@ public class FCDPID extends LinearOpMode {
             double intakePower = (iF + iR);
 
 
-            if (gamepad1.right_bumper && gamepad1.left_bumper && gamepad2.right_bumper && gamepad2.left_bumper){
+            if (gamepad1.right_bumper && gamepad1.left_bumper && gamepad2.right_bumper && gamepad2.left_bumper) {
                 frontRightPower = 999;
                 rearRightPower = 999;
                 rearLeftPower = -999;
@@ -134,7 +127,7 @@ public class FCDPID extends LinearOpMode {
                 frontLeftPower = 0;
             }
 
-            double currentSlidePosition = slideControl.getCurrentPosition();
+            slideControl.getCurrentPosition();
 
             if (gamepad2.left_stick_y > 0.1 || gamepad2.left_stick_y < -0.1) {
                 targetSlidePosition += gamepad2.left_stick_y * 30;
@@ -146,7 +139,7 @@ public class FCDPID extends LinearOpMode {
                 armControl.setPosition(targetArmPosition);
             }
 
-            isArmBeingControlled = (Math.abs(gamepad2.right_stick_y) > 0.1);
+            boolean isArmBeingControlled = (Math.abs(gamepad2.right_stick_y) > 0.1);
 
             if (gamepad2.dpad_up) {
                 targetServoPosition = -10;
@@ -200,10 +193,6 @@ public class FCDPID extends LinearOpMode {
 
             if (presetCycle != lastPresetCycle && !isArmBeingControlled) {
                 switch (presetCycle) {
-                    case 0:
-                        telemetry.addData("preset", "none selected");
-                        telemetry.update();
-                        break;
                     case 1:
                         targetArmPosition = 0;
                         break;
@@ -241,32 +230,32 @@ public class FCDPID extends LinearOpMode {
             }
 
 
-                frontRight.setPower(frontRightPower);
-                rearRight.setPower(rearRightPower);
-                rearLeft.setPower(rearLeftPower);
-                frontLeft.setPower(frontLeftPower);
-                intake.setPower(intakePower);
+            frontRight.setPower(frontRightPower);
+            rearRight.setPower(rearRightPower);
+            rearLeft.setPower(rearLeftPower);
+            frontLeft.setPower(frontLeftPower);
+            intake.setPower(intakePower);
 
 //            slideControl.setTargetPosition(targetSlidePosition);
 //            slideControl.setServoPosition(targetServoPosition);
-                armControl.setPosition(targetArmPosition);
-                armControl.update();
-                slideControl.update();
+            armControl.setPosition(targetArmPosition);
+            armControl.update();
+            slideControl.update();
 
-                String emptyVariable = " ";
+            String emptyVariable = " ";
 
-                telemetry.addData("Half-Speed Mode", halfSpeed ? "ON" : "OFF");
-                telemetry.addData("", emptyVariable);
-                telemetry.addData("Arm Target Position", armControl.getArmTargetPosition());
-                telemetry.addData("Arm Position", armControl.getArmPosition());
-                telemetry.addData("", emptyVariable);
-                telemetry.addData("Slide Target Position", slideControl.getTargetPosition());
-                telemetry.addData("Slide Position", slideControl.getCurrentPosition());
-                telemetry.addData("Servo Position", targetServoPosition);
-                telemetry.addData("", emptyVariable);
-                telemetry.addData("Heading", botHeading);
-                telemetry.addData("", emptyVariable);
-                telemetry.update();
-            }
+            telemetry.addData("Half-Speed Mode", halfSpeed ? "ON" : "OFF");
+            telemetry.addData("", emptyVariable);
+            telemetry.addData("Arm Target Position", armControl.getArmTargetPosition());
+            telemetry.addData("Arm Position", armControl.getArmPosition());
+            telemetry.addData("", emptyVariable);
+            telemetry.addData("Slide Target Position", slideControl.getTargetPosition());
+            telemetry.addData("Slide Position", slideControl.getCurrentPosition());
+            telemetry.addData("Servo Position", targetServoPosition);
+            telemetry.addData("", emptyVariable);
+            telemetry.addData("Heading", botHeading);
+            telemetry.addData("", emptyVariable);
+            telemetry.update();
         }
     }
+}

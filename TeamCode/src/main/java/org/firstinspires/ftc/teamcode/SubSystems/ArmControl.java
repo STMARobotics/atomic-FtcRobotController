@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.SubSystems;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class ArmControl {
@@ -11,26 +10,17 @@ public class ArmControl {
     private final PIDFController armPID;
     private double armTargetPosition = 0.0;
 
-    private static final double TICKS_PER_REVOLUTION = 28;
-
     private static final double kP = 0.008;
     private static final double kI = 0;
     private static final double kD = 0;
     private static final double kF = 0;
     private static final double kG = 0;
 
-    private double previousPosition = 0.0;
-    private double previousTime = 0.0;
-
 
     public ArmControl(HardwareMap hardwareMap) {
         arm = new MotorEx(hardwareMap, "arm");
         arm.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
         armPID = new PIDFController(kP, kI, kD, kF);
-    }
-
-    public void setJoystickInput(double joystickInput) {
-        armTargetPosition += joystickInput;
     }
 
     public void update() {

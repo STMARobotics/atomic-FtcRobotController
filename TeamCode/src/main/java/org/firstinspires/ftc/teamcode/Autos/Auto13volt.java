@@ -17,16 +17,11 @@ import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
 @Autonomous
 public class Auto13volt extends LinearOpMode {
 
-    private ArmControl armControl;
-    private SlideControl slideControl;
     private IMU imu;
     private double fieldOffset = 0;
-    double targetSlidePosition;
-    double targetServoPosition;
-    double emptyVariable;
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
         DcMotor frontRight = hardwareMap.dcMotor.get("frontRight");
         DcMotor rearRight = hardwareMap.dcMotor.get("rearRight");
         DcMotor rearLeft = hardwareMap.dcMotor.get("rearLeft");
@@ -39,8 +34,8 @@ public class Auto13volt extends LinearOpMode {
         Servo slideServo = hardwareMap.get(Servo.class, "servo");
         final CRServo intake = hardwareMap.get(CRServo.class, "intake");
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        armControl = new ArmControl(hardwareMap);
-        slideControl = new SlideControl(slideMotor, slideServo);
+        ArmControl armControl = new ArmControl(hardwareMap);
+        SlideControl slideControl = new SlideControl(slideMotor, slideServo);
 
         slideControl.resetEncoder();
         armControl.resetZero();
@@ -147,7 +142,7 @@ public class Auto13volt extends LinearOpMode {
         slideControl.update();
     }
 
-    private void moveDrivetrain(DcMotor frontLeft, DcMotor rearLeft, DcMotor frontRight, DcMotor rearRight, double power, int duration) throws InterruptedException {
+    private void moveDrivetrain(DcMotor frontLeft, DcMotor rearLeft, DcMotor frontRight, DcMotor rearRight, double power, int duration) {
         frontLeft.setPower(power);
         rearLeft.setPower(power);
         frontRight.setPower(power);
@@ -162,8 +157,9 @@ public class Auto13volt extends LinearOpMode {
         rearRight.setPower(0);
     }
 
-    private void rotateToAngle(DcMotor frontLeft, DcMotor rearLeft, DcMotor frontRight, DcMotor rearRight, double targetAngle) throws InterruptedException {
-        double currentAngle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) - fieldOffset;
+    private void rotateToAngle(DcMotor frontLeft, DcMotor rearLeft, DcMotor frontRight, DcMotor rearRight, double targetAngle) {
+        imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        double currentAngle;
         double turnPower;
         double error;
 
@@ -201,19 +197,4 @@ public class Auto13volt extends LinearOpMode {
         stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
     }
 
-    public void dontWaitForSlide(){
-        slideControl.setTargetPosition(0);
-
-    }
-
-    public void waitForSlideToReachTarget(SlideControl slideControl, double targetPosition) throws InterruptedException {
-        while (opModeIsActive() && Math.abs(slideControl.getCurrentPosition() - targetPosition) > 1) {
-            slideControl.update();
-            telemetry.addData("Current Slide Position", slideControl.getCurrentPosition());
-            telemetry.addData("Target Slide Position", targetPosition);
-            telemetry.addData("Slide Error", Math.abs(slideControl.getCurrentPosition() - targetPosition));
-            telemetry.update();
-            sleep(50);
-        }
-    }
 }

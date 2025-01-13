@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
-import static java.lang.Thread.sleep;
+import android.annotation.SuppressLint;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,8 +11,6 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.SubSystems.ArmControl;
-import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,13 +18,10 @@ import java.util.Date;
 
 public class MainSubsystem {
 
-    private ArmControl armControl;
-    private SlideControl slideControl;
-    private IMU imu;
-    private VoltageSensor batterySensor;
-    private HardwareMap hardwareMap;
-    private boolean isCalibrated = false;
-    private double armError;
+    private final ArmControl armControl;
+    private final SlideControl slideControl;
+    private final IMU imu;
+    private final VoltageSensor batterySensor;
 
     public MainSubsystem(HardwareMap hardwareMap) {
         DcMotor frontRight = hardwareMap.dcMotor.get("frontRight");
@@ -41,10 +36,8 @@ public class MainSubsystem {
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         rearRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        this.hardwareMap = hardwareMap;
-
         armControl = new ArmControl(hardwareMap);
-        slideControl = new SlideControl(hardwareMap);
+        slideControl = new SlideControl();
 
         imu = hardwareMap.get(IMU.class, "imu");
         batterySensor = hardwareMap.voltageSensor.iterator().next();
@@ -84,7 +77,6 @@ public class MainSubsystem {
     public void calibrate() {
         armControl.resetZero();
         slideControl.resetEncoder();
-        isCalibrated = true;
     }
 
     public void moveDrivetrain(DcMotor frontLeft, DcMotor rearLeft, DcMotor frontRight, DcMotor rearRight, double power, int duration) {
@@ -147,6 +139,7 @@ public class MainSubsystem {
         stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
     }
 
+    @SuppressLint("DefaultLocale")
     public void logData(Gamepad gamepad1, Gamepad gamepad2) {
         try (FileWriter writer = new FileWriter("logData.csv", true)) {
             String timestamp = new Date().toString();
@@ -197,7 +190,7 @@ public class MainSubsystem {
     }
 
     public void fixArmErrorBeta() {
-        armError = getArmError();
+        double armError = getArmError();
         armControl.setPosition(getArmTargetPosition() - armError);
         armControl.update();
     }

@@ -8,10 +8,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 @TeleOp
 public class FixSlideNotZeroing extends LinearOpMode {
-    private double ampDraw;
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
         final DcMotorEx slideMotor = hardwareMap.get(DcMotorEx.class, "slide");
 
         waitForStart();
@@ -19,7 +18,7 @@ public class FixSlideNotZeroing extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            ampDraw = slideMotor.getCurrent(CurrentUnit.AMPS);
+            double ampDraw = slideMotor.getCurrent(CurrentUnit.AMPS);
 
             while (ampDraw < 5) {
                 ampDraw = slideMotor.getCurrent(CurrentUnit.AMPS);

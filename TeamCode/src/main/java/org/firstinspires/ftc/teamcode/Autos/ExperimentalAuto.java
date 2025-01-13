@@ -1,24 +1,20 @@
 package org.firstinspires.ftc.teamcode.Autos;
 
 import com.arcrobotics.ftclib.command.ParallelCommandGroup;
-import com.arcrobotics.ftclib.command.SequentialCommandGroup;
-import com.arcrobotics.ftclib.command.WaitCommand;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.teamcode.Commands.Movement.RotateZero;
 import org.firstinspires.ftc.teamcode.SubSystems.ArmControl;
 import org.firstinspires.ftc.teamcode.SubSystems.MainSubsystem;
 import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
-import org.firstinspires.ftc.teamcode.SubSystems.ServoSubsystemForAuto;
 import org.firstinspires.ftc.teamcode.SubSystems.VariableFactory;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Commands.ArmToPickupCommand;
-import org.firstinspires.ftc.teamcode.Commands.DropHighCommand;
 import org.firstinspires.ftc.teamcode.Commands.SlideToZero;
 import org.firstinspires.ftc.teamcode.Commands.Movement.Drop2nd;
 import org.firstinspires.ftc.teamcode.Commands.Movement.Drop3rd;
@@ -28,14 +24,8 @@ import org.firstinspires.ftc.teamcode.Commands.Movement.Grab3rd;
 @Autonomous
 public class ExperimentalAuto extends LinearOpMode {
 
-    private ArmControl armControl;
-    private SlideControl slideControl;
-    private MainSubsystem mainSubsystem;
-    private ServoSubsystemForAuto servoSubsystem;
-    private VariableFactory variableFactory;
-
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
         DcMotor frontRight = hardwareMap.dcMotor.get("frontRight");
         DcMotor rearRight = hardwareMap.dcMotor.get("rearRight");
         DcMotor rearLeft = hardwareMap.dcMotor.get("rearLeft");
@@ -44,10 +34,12 @@ public class ExperimentalAuto extends LinearOpMode {
         DcMotorEx slideMotor = hardwareMap.get(DcMotorEx.class, "slide");
         Servo slideServo = hardwareMap.get(Servo.class, "servo");
 
-        armControl = new ArmControl(hardwareMap);
-        slideControl = new SlideControl(slideMotor, slideServo);
-        mainSubsystem = new MainSubsystem(hardwareMap);
-        variableFactory = new VariableFactory();
+        VoltageSensor batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
+
+        ArmControl armControl = new ArmControl(hardwareMap);
+        SlideControl slideControl = new SlideControl(slideMotor, slideServo);
+        MainSubsystem mainSubsystem = new MainSubsystem(hardwareMap);
+        VariableFactory variableFactory = new VariableFactory();
 
         slideControl.resetEncoder();
         armControl.resetZero();
@@ -57,6 +49,10 @@ public class ExperimentalAuto extends LinearOpMode {
         waitForStart();
 
         if (isStopRequested()) return;
+
+        double batteryVoltage = batteryVoltageSensor.getVoltage();
+
+        variableFactory.updateBatteryVoltage(batteryVoltage);
 
         mainSubsystem.moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, variableFactory.getVariable("moveTo1stBasketPower"), variableFactory.getVariable("moveTo1stBasketDuration1"));
 
@@ -76,7 +72,7 @@ public class ExperimentalAuto extends LinearOpMode {
 
         new ParallelCommandGroup(
                 new SlideToZero(slideControl),
-                new Grab2nd(mainSubsystem)
+                new Grab2nd(mainSubsystem, variableFactory)
         ).schedule();
 
         intake.setPower(0);
@@ -89,7 +85,7 @@ public class ExperimentalAuto extends LinearOpMode {
 
         new ParallelCommandGroup (
                 new ArmToPickupCommand(armControl),
-                new Drop2nd(mainSubsystem)).schedule();
+                new Drop2nd(mainSubsystem, variableFactory)).schedule();
 
         slideControl.autoSlideMover(-3550);
         slideControl.setServoPosition(-80);
@@ -100,7 +96,7 @@ public class ExperimentalAuto extends LinearOpMode {
 
         new ParallelCommandGroup(
                 new SlideToZero(slideControl),
-                new Grab3rd(mainSubsystem)).schedule();
+                new Grab3rd(mainSubsystem, variableFactory)).schedule();
 
         armControl.autoArmMover(1540);
         intake.setPower(-1);
@@ -109,7 +105,7 @@ public class ExperimentalAuto extends LinearOpMode {
 
         new ParallelCommandGroup(
                 new ArmToPickupCommand(armControl),
-                new Drop3rd(mainSubsystem)).schedule();
+                new Drop3rd(mainSubsystem, variableFactory)).schedule();
 
         slideControl.autoSlideMover(-3550);
         slideControl.setServoPosition(-80);

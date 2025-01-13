@@ -2,11 +2,8 @@ package org.firstinspires.ftc.teamcode.SubSystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 public class SlideControl {
 
@@ -14,11 +11,8 @@ public class SlideControl {
     private Servo servo;
     private double targetPosition;
     private double currentPosition;
-    private ElapsedTime runtime = new ElapsedTime();
+    private final ElapsedTime runtime = new ElapsedTime();
 
-    private static final double TICKS_PER_REVOLUTION = 28;
-
-    private double kP = 0.01, kI = 0, kD = 0.0;
     private double previousError = 0, integral = 0;
 
     public SlideControl(DcMotorEx slide, Servo servo) {
@@ -29,7 +23,7 @@ public class SlideControl {
         this.currentPosition = 0;
     }
 
-    public SlideControl(HardwareMap hardwareMap) {
+    public SlideControl() {
     }
 
     public void resetEncoder() {
@@ -44,6 +38,9 @@ public class SlideControl {
         integral += error * runtime.seconds();
         double derivative = (error - previousError) / runtime.seconds();
 
+        double kP = 0.01;
+        double kI = 0;
+        double kD = 0.0;
         double power = (kP * error) + (kI * integral) + (kD * derivative);
 
         slide.setPower(power);
@@ -94,16 +91,7 @@ public class SlideControl {
     }
 
 
-    public void setPower(double setPower){
-        slide.setPower(setPower);
-    }
-
-
-    public void updateTelemetry(Telemetry telemetry) {
-        telemetry.addData("Current Motor Position", currentPosition);
-        telemetry.addData("Target Motor Position", targetPosition);
-        telemetry.addData("Servo Position", servo.getPosition());
-        telemetry.addData("PID Error", targetPosition - currentPosition);
-        telemetry.update();
-    }
+//    public void setPower(double setPower){
+//        slide.setPower(setPower);
+//    }
 }

@@ -15,10 +15,10 @@ public class ArmToPickupCommand extends CommandBase {
         addRequirements((Subsystem) armControl);
     }
 
-    @Override
-    public void initialize() {
-
-    }
+//    @Override
+//    public void initialize() {
+//
+//    }
 
     @Override
     public void execute() {
@@ -27,14 +27,10 @@ public class ArmToPickupCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        if (armControl.getArmError() < 10){
-            return true;
-        } else {
-            return false;
-        }
+        return armControl.getArmError() < 10;
     }
 
-    @Override
-    public void end(boolean interrupted) {
-    }
+//    @Override
+//    public void end(boolean interrupted) {
+//    }
 }

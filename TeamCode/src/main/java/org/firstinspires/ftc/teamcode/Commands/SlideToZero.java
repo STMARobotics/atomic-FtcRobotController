@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.Commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.command.Subsystem;
-
-import org.firstinspires.ftc.teamcode.SubSystems.MainSubsystem;
 import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
 
 public class SlideToZero extends CommandBase {
@@ -15,10 +13,10 @@ public class SlideToZero extends CommandBase {
         addRequirements((Subsystem) slideControl);
     }
 
-    @Override
-    public void initialize() {
-
-    }
+//    @Override
+//    public void initialize() {
+//
+//    }
 
     @Override
     public void execute() {
@@ -27,14 +25,10 @@ public class SlideToZero extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        if (slideControl.getSlideError() < 1.5) {
-            return true;
-        } else {
-            return false;
-        }
+        return slideControl.getSlideError() < 1.5;
     }
 
-    @Override
-    public void end(boolean interrupted) {
-    }
+//    @Override
+//    public void end(boolean interrupted) {
+//    }
 }
