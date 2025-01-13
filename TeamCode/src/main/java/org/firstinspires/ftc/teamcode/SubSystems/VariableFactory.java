@@ -60,6 +60,8 @@ public class VariableFactory extends SubsystemBase {
     private double moveToDrop3rdDuration_14v = 500;
     private double rotateToDrop3rdAngle_14v = -45;
 
+    //im so proud of this its literally gonna work
+
     private double batteryVoltage;
 
     public void updateBatteryVoltage(double voltage) {

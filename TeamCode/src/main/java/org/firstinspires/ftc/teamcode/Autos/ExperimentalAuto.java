@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.teamcode.Commands.Movement.RotateZero;
 import org.firstinspires.ftc.teamcode.SubSystems.ArmControl;
 import org.firstinspires.ftc.teamcode.SubSystems.MainSubsystem;
 import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
@@ -70,18 +72,53 @@ public class ExperimentalAuto extends LinearOpMode {
         armControl.autoArmMover(4950);
         mainSubsystem.rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, variableFactory.getVariable("rotateToPickup2ndAngle"));
 
+        intake.setPower(1);
+
         new ParallelCommandGroup(
                 new SlideToZero(slideControl),
                 new Grab2nd(mainSubsystem)
         ).schedule();
 
+        intake.setPower(0);
 
+        armControl.autoArmMover(1540);
+        intake.setPower(-1);
+        sleep(300);
+        intake.setPower(0);
+        slideControl.setServoPosition(0);
 
-
-        new SequentialCommandGroup(
+        new ParallelCommandGroup (
+                new ArmToPickupCommand(armControl),
                 new Drop2nd(mainSubsystem)).schedule();
 
-        mainSubsystem.rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, 0);
+        slideControl.autoSlideMover(-3550);
+        slideControl.setServoPosition(-80);
+        sleep(850);
+        slideControl.setServoPosition(0);
+        mainSubsystem.rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, variableFactory.getVariable("rotateToPickup3rdAngle"));
+        intake.setPower(1);
+
+        new ParallelCommandGroup(
+                new SlideToZero(slideControl),
+                new Grab3rd(mainSubsystem)).schedule();
+
+        armControl.autoArmMover(1540);
+        intake.setPower(-1);
+        sleep(300);
+        intake.setPower(0);
+
+        new ParallelCommandGroup(
+                new ArmToPickupCommand(armControl),
+                new Drop3rd(mainSubsystem)).schedule();
+
+        slideControl.autoSlideMover(-3550);
+        slideControl.setServoPosition(-80);
+        sleep(850);
+        slideControl.setServoPosition(0);
+
+        new ParallelCommandGroup(
+                new SlideToZero(slideControl),
+                new RotateZero(mainSubsystem)).schedule();
 
         telemetry.addData("Autonomous", "Complete");
         telemetry.update();

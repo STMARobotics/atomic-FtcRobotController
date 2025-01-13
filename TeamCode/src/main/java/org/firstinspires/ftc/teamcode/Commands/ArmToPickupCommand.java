@@ -22,8 +22,8 @@ public class ArmToPickupCommand extends CommandBase {
 
     @Override
     public void execute() {
-        armControl.autoArmMover(1000);
-    }//this is a placeholder we need to actually find the pickup position for auto because its different then teleop
+        armControl.autoArmMover(4950);
+    }
 
     @Override
     public boolean isFinished() {

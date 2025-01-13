@@ -22,12 +22,12 @@ public class SlideToZero extends CommandBase {
 
     @Override
     public void execute() {
-        slideControl.autoSlideMover(-10);
+        slideControl.autoSlideMover(0);
     }
 
     @Override
     public boolean isFinished() {
-        if (slideControl.getSlideError() < 10) {
+        if (slideControl.getSlideError() < 1.5) {
             return true;
         } else {
             return false;
