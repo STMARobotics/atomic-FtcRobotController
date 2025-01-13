@@ -89,6 +89,10 @@ public class SlideControl {
         slide.setPower(0);
     }
 
+    public double getSlideError() {
+        return Math.abs(getTargetPosition()) - Math.abs(getCurrentPosition());
+    }
+
 
     public void setPower(double setPower){
         slide.setPower(setPower);

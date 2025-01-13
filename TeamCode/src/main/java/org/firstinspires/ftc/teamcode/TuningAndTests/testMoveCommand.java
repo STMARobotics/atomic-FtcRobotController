@@ -1,16 +1,11 @@
-package org.firstinspires.ftc.teamcode.Commands;
+package org.firstinspires.ftc.teamcode.TuningAndTests;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
 import com.arcrobotics.ftclib.command.CommandBase;
-import com.arcrobotics.ftclib.command.Subsystem;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.SubSystems.ArmControl;
-import org.firstinspires.ftc.teamcode.SubSystems.MainSubsystem;
-import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
 
 public class testMoveCommand extends CommandBase {
     private final DcMotor frontRight;
@@ -19,7 +14,7 @@ public class testMoveCommand extends CommandBase {
     private final DcMotor frontLeft;
     private final ElapsedTime timer;
 
-    public testMoveCommand(SlideControl slideControl, ArmControl armControl, MainSubsystem mainSubsystem) {
+    public testMoveCommand() {
         frontRight = hardwareMap.dcMotor.get("frontRight");
         rearRight = hardwareMap.dcMotor.get("rearRight");
         rearLeft = hardwareMap.dcMotor.get("rearLeft");
@@ -55,7 +50,7 @@ public class testMoveCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return timer.seconds() >= 5.0;  // Return true after 5 seconds
+        return timer.seconds() >= 5.0;
     }
 
     @Override

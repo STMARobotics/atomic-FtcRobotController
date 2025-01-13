@@ -63,6 +63,11 @@ public class ArmControl {
         return arm.getCurrentPosition();
     }
 
+    public double getArmError() {
+        // this is for auto only because we cant use same subsystem at the same time
+        return Math.abs(getArmTargetPosition()) - Math.abs(getArmPosition());
+    }
+
     public void autoArmMover(double autoTargetArmPosition){
         setPosition(autoTargetArmPosition);
         while (Math.abs(autoTargetArmPosition - getArmPosition()) > 25){

@@ -109,6 +109,7 @@ public class Auto12volt extends LinearOpMode {
 
         stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
 
+        //grab 3rd angle
         rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, 12);
 
         //grab 3rd and drop 3rd

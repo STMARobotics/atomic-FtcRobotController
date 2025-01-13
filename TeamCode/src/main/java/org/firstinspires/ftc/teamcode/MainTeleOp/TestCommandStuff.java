@@ -7,8 +7,8 @@ import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 
-import org.firstinspires.ftc.teamcode.Commands.testSlideUp;
-import org.firstinspires.ftc.teamcode.Commands.testMoveCommand;
+import org.firstinspires.ftc.teamcode.TuningAndTests.testSlideUp;
+import org.firstinspires.ftc.teamcode.TuningAndTests.testMoveCommand;
 import org.firstinspires.ftc.teamcode.SubSystems.ArmControl;
 import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
 import org.firstinspires.ftc.teamcode.SubSystems.MainSubsystem;
@@ -31,8 +31,8 @@ public class TestCommandStuff extends CommandOpMode {
         slideControl = new SlideControl(hardwareMap);
         mainSubsystem = new MainSubsystem(hardwareMap);
 
-        command1 = new testSlideUp(armControl, slideControl, mainSubsystem);
-        command2 = new testMoveCommand(slideControl, armControl, mainSubsystem);
+        command1 = new testSlideUp(slideControl, mainSubsystem);
+        command2 = new testMoveCommand();
 
         new GamepadButton(driverOp, GamepadKeys.Button.A)
                 .whenPressed(

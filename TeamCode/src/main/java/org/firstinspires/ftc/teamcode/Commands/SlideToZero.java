@@ -3,19 +3,16 @@ package org.firstinspires.ftc.teamcode.Commands;
 import com.arcrobotics.ftclib.command.CommandBase;
 import com.arcrobotics.ftclib.command.Subsystem;
 
-import org.firstinspires.ftc.teamcode.SubSystems.ArmControl;
 import org.firstinspires.ftc.teamcode.SubSystems.MainSubsystem;
 import org.firstinspires.ftc.teamcode.SubSystems.SlideControl;
 
-public class testSlideUp extends CommandBase {
+public class SlideToZero extends CommandBase {
     private final SlideControl slideControl;
-    private final MainSubsystem mainSubsystem;
 
-    public testSlideUp(ArmControl armControl, SlideControl slideControl, MainSubsystem mainSubsystem) {
+    public SlideToZero(SlideControl slideControl) {
         this.slideControl = slideControl;
-        this.mainSubsystem = mainSubsystem;
 
-        addRequirements((Subsystem) slideControl, (Subsystem) mainSubsystem);
+        addRequirements((Subsystem) slideControl);
     }
 
     @Override
@@ -25,12 +22,12 @@ public class testSlideUp extends CommandBase {
 
     @Override
     public void execute() {
-        slideControl.autoSlideMover(-3550);
+        slideControl.autoSlideMover(-10);
     }
 
     @Override
     public boolean isFinished() {
-        if (mainSubsystem.getSlideError() < 10){
+        if (slideControl.getSlideError() < 10) {
             return true;
         } else {
             return false;

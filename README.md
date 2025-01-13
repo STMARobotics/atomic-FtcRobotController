@@ -1,4 +1,4 @@
-# FTC Team 26530 Atomic Aces
+ FTC Team 26530 Atomic Aces
 
 Welcome to the official repository for FTC Team 26530 Atomic Aces!
 
@@ -30,7 +30,7 @@ This repository contains the code developed by our team for the FIRST Tech Chall
 
 - [**Andy G.**](https://github.com/agasser) - THE programmer of all time
 
-- [**Brandon G.**](https://github.com/brandongasser) - Helps me with debugging, I use him as my [rubber duck](https://rubberduckdebugging.com/)
+- [**Brandon G.**](https://github.com/brandongasser) - Helps me with debugging
 
 ## Overview
 
@@ -38,7 +38,6 @@ Our code is designed to control our robot for various tasks and challenges in th
 
 ## Features
 
-- **Autonomous Mode:** We made an auto for each battery voltage so we are accurate every time; it scores 48 points accurately every time. (It's time-based; the actual code isn't pushed yet.)
+- **Autonomous Mode:** We made an auto for each battery voltage so we are accurate every time; it scores 48 points accurately every time.
 
 - **TeleOp Mode:** Manual control for drivers to operate the robot, still a work in progress, but it's pretty efficient.
-

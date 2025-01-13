@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
+import static java.lang.Thread.sleep;
+
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
@@ -25,15 +29,30 @@ public class MainSubsystem {
     private double armError;
 
     public MainSubsystem(HardwareMap hardwareMap) {
+        DcMotor frontRight = hardwareMap.dcMotor.get("frontRight");
+        DcMotor rearRight = hardwareMap.dcMotor.get("rearRight");
+        DcMotor rearLeft = hardwareMap.dcMotor.get("rearLeft");
+        DcMotor frontLeft = hardwareMap.dcMotor.get("frontLeft");
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        rearRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
         this.hardwareMap = hardwareMap;
+
         armControl = new ArmControl(hardwareMap);
         slideControl = new SlideControl(hardwareMap);
+
         imu = hardwareMap.get(IMU.class, "imu");
         batterySensor = hardwareMap.voltageSensor.iterator().next();
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
         imu.initialize(parameters);
+
     }
 
     public double getArmPosition() {
@@ -62,19 +81,70 @@ public class MainSubsystem {
         return Math.abs(slideControl.getTargetPosition()) - Math.abs(slideControl.getCurrentPosition());
     }
 
-    public double getIntakeServoPower() {
-        // implement this later
-        return 0;
-    }
-
-//    public double getBucketServoTargetPosition() {
-//        //not working
-//    }
-
     public void calibrate() {
         armControl.resetZero();
         slideControl.resetEncoder();
         isCalibrated = true;
+    }
+
+    public void moveDrivetrain(DcMotor frontLeft, DcMotor rearLeft, DcMotor frontRight, DcMotor rearRight, double power, int duration) {
+        frontLeft.setPower(power);
+        rearLeft.setPower(power);
+        frontRight.setPower(power);
+        rearRight.setPower(power);
+        safeSleep(duration);
+    }
+
+    public void stopDrivetrain(DcMotor frontLeft, DcMotor rearLeft, DcMotor frontRight, DcMotor rearRight) {
+        frontLeft.setPower(0);
+        rearLeft.setPower(0);
+        frontRight.setPower(0);
+        rearRight.setPower(0);
+    }
+
+    private void safeSleep(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public void rotateToAngle(DcMotor frontLeft, DcMotor rearLeft, DcMotor frontRight, DcMotor rearRight, double targetAngle) {
+        double fieldOffset = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        double currentAngle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) - fieldOffset;
+        double turnPower;
+        double error = targetAngle - currentAngle;
+
+        while (error>3) {
+            fieldOffset = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+            currentAngle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) - fieldOffset;
+
+            error = targetAngle - currentAngle;
+            error = ((error + 180) % 360 + 360) % 360 - 180;
+
+            if (Math.abs(error) <= 2) {
+                break;
+            }
+
+            turnPower = 0.65 * (Math.abs(error) / 45.0);
+            turnPower = Math.max(0.1, turnPower);
+
+            if (error > 0) {
+                frontLeft.setPower(turnPower);
+                rearLeft.setPower(turnPower);
+                frontRight.setPower(-turnPower);
+                rearRight.setPower(-turnPower);
+            } else {
+                frontLeft.setPower(-turnPower);
+                rearLeft.setPower(-turnPower);
+                frontRight.setPower(turnPower);
+                rearRight.setPower(turnPower);
+            }
+
+        }
+
+        stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
     }
 
     public void logData(Gamepad gamepad1, Gamepad gamepad2) {
