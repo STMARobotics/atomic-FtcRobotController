@@ -10,17 +10,17 @@ public class SlideToZero extends CommandBase {
     public SlideToZero(SlideControl slideControl) {
         this.slideControl = slideControl;
 
-        addRequirements((Subsystem) slideControl);
+        addRequirements(slideControl);
     }
 
-//    @Override
-//    public void initialize() {
-//
-//    }
+    @Override
+    public void initialize() {
+        slideControl.setTargetPosition(0);
+    }
 
     @Override
     public void execute() {
-        slideControl.autoSlideMover(0);
+        slideControl.update();
     }
 
     @Override
@@ -28,7 +28,8 @@ public class SlideToZero extends CommandBase {
         return slideControl.getSlideError() < 1.5;
     }
 
-//    @Override
-//    public void end(boolean interrupted) {
-//    }
+    @Override
+    public void end(boolean interrupted) {
+        slideControl.setSlidePower(0);
+    }
 }

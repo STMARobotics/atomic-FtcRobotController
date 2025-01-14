@@ -85,12 +85,12 @@ public class MainSubsystem extends SubsystemBase {
         slideControl.resetEncoder();
     }
 
-    public void moveDrivetrain(double power, int duration) {
+    public void moveDrivetrain(double power, double  duration) {
         frontLeft.setPower(power);
         rearLeft.setPower(power);
         frontRight.setPower(power);
         rearRight.setPower(power);
-        safeSleep(duration);
+        safeSleep((long) duration);
     }
 
     public void stopDrivetrain() {

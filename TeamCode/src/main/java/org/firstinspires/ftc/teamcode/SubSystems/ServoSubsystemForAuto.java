@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
+import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class ServoSubsystemForAuto {
+public class ServoSubsystemForAuto extends SubsystemBase {
     private final Servo servo;
 
     public ServoSubsystemForAuto(Servo servo) {

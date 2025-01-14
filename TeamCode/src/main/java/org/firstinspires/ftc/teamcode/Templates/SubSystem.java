@@ -2,7 +2,7 @@
 //
 ////import various stuff;
 //
-//public class SubSystem {
+//public class SubSystem extends SubsystemBase {
 //
 //    public void something(){
 //        //do stuff idk

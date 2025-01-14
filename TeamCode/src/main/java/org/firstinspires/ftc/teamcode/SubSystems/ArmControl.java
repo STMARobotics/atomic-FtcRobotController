@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode.SubSystems;
 
+import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-public class ArmControl {
+public class ArmControl extends SubsystemBase {
     private final MotorEx arm;
     private final PIDFController armPID;
     private double armTargetPosition = 0.0;

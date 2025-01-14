@@ -48,6 +48,15 @@ public class ExperimentalAuto extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
+        double batteryVoltage = batteryVoltageSensor.getVoltage();
+
+        variableFactory.updateBatteryVoltage(batteryVoltage);
+
+        telemetry.addData("voltage check", batteryVoltage);
+        telemetry.addData("variableFactory check", variableFactory.getVariable("moveTo1stBasketPower"));
+        telemetry.addData("variableFactory check2", variableFactory.getVariable("rotateToDrop1stAngle"));
+        telemetry.update();
+
         if (isStopRequested()) return;
 
         // Start auto
@@ -125,11 +134,9 @@ public class ExperimentalAuto extends LinearOpMode {
                         new RotateZero(mainSubsystem))
         ).andThen(new RunCommand(() -> {
             telemetry.addData("Autonomous", "Complete");
-        }));
+        })).schedule();
 
         while (opModeIsActive()) {
-            double batteryVoltage = batteryVoltageSensor.getVoltage();
-            variableFactory.updateBatteryVoltage(batteryVoltage);
             CommandScheduler.getInstance().run();
             telemetry.update();
         }

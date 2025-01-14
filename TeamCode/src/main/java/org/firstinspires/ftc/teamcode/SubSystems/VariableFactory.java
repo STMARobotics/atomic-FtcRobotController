@@ -68,16 +68,16 @@ public class VariableFactory extends SubsystemBase {
         this.batteryVoltage = voltage;
     }
 
-    public int getVariable(String variableName) {
+    public double getVariable(String variableName) {
         String section = determineClosestVoltageSection();
         String fullVariableName = variableName + "_" + section;
 
         try {
             Field field = this.getClass().getDeclaredField(fullVariableName);
             field.setAccessible(true);
-            return (int) field.getDouble(this);
+            return field.getDouble(this);
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            return 0;
+            throw new RuntimeException("failed to find variable " + variableName);
         }
     }
 
