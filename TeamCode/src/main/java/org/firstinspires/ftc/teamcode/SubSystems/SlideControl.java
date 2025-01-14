@@ -64,7 +64,9 @@ public class SlideControl extends SubsystemBase {
         slide.setPower(power);
     }
 
-
+    public double getSlideAmps() {
+        return slide.getCurrent(CurrentUnit.AMPS);
+    }
 
     public void setServoPosition(double position) {
         position = Math.max(-90, Math.min(90, position));

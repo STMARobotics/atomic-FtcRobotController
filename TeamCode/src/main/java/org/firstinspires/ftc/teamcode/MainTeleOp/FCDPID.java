@@ -216,8 +216,8 @@ public class FCDPID extends LinearOpMode {
             }
 
 
-            if (targetSlidePosition > 1) {
-                targetSlidePosition = 0;
+            if (targetSlidePosition > -1) {
+                targetSlidePosition = -1;
                 slideControl.setTargetPosition(targetSlidePosition);
             }
 
@@ -226,8 +226,17 @@ public class FCDPID extends LinearOpMode {
                 slideControl.setTargetPosition(targetSlidePosition);
             }
 
-            if (targetSlidePosition > 1) {
+            if (targetSlidePosition > -1) {
                 slideControl.setSlidePower(0);
+            }
+
+            if (slideControl.getSlideAmps > 4) {
+                targetSlidePosition += -5;
+                slideControl.setTargetPosition(targetSlidePosition);
+            }
+
+            if (slideControl.getSlideAmps > 5) {
+                slideControl.setPower(0);
             }
 
 
