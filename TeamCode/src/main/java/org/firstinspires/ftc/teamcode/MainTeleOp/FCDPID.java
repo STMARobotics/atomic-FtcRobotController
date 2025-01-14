@@ -233,10 +233,16 @@ public class FCDPID extends LinearOpMode {
             if (slideControl.getSlideAmps > 4) {
                 targetSlidePosition += -5;
                 slideControl.setTargetPosition(targetSlidePosition);
+                boolean settingSlideTargetHigher = true;
+            } else {
+                settingSlideTargetHigher = false;
             }
 
             if (slideControl.getSlideAmps > 5) {
                 slideControl.setPower(0);
+                boolean turningOffSlide = true;
+            } else {
+                turningOffSlide = false;
             }
 
 
@@ -262,6 +268,10 @@ public class FCDPID extends LinearOpMode {
             telemetry.addData("Slide Target Position", slideControl.getTargetPosition());
             telemetry.addData("Slide Position", slideControl.getCurrentPosition());
             telemetry.addData("Servo Position", targetServoPosition);
+            telemetry.addData("Slide Amp Draw", slideControl.getSlideAmps())
+            telemetry.addData("", emptyVariable);
+            telemetry.addData("Minor slide fix", settingSlideTargetHigher)
+            telemetry.addData("turning off slide (warning)", turningOffSlide)
             telemetry.addData("", emptyVariable);
             telemetry.addData("Heading", botHeading);
             telemetry.addData("", emptyVariable);
