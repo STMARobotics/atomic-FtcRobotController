@@ -61,7 +61,7 @@ public class SpecimineSkeleton extends LinearOpMode {
         slideServo.setPosition(0);
 
         // Move the drivetrain forward a bit so the arm can actually go out without breaking
-        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, 0.3, 250);
+        moveDrivetrainNoStop(frontLeft, rearLeft, frontRight, rearRight, -0.3, 250);
 
         // Move slide up to allow the arm to go out
         slideControl.autoSlideMover(-2000);
@@ -69,17 +69,14 @@ public class SpecimineSkeleton extends LinearOpMode {
         // Move arm out, we will need to change this value because theres no way its right first try
         armControl.autoArmMover(2000);
 
+        // Stop
+        stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
+
         // Move forward to the bar with arm up
         moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, -0.7, 2500);
 
-        // Stop the drivetrain
-        stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
-
         // Move backward to hook it and stuff!1!!!1!1!
         moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, 0.3, 1500);
-
-        // Stop the drivetrain
-        stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
 
 //        // Backup if strafe doesnt work
 //        rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, 90);
@@ -150,6 +147,18 @@ public class SpecimineSkeleton extends LinearOpMode {
     }
 
     private void moveDrivetrain(DcMotor frontLeft, DcMotor rearLeft, DcMotor frontRight, DcMotor rearRight, double power, int duration) {
+        frontLeft.setPower(power);
+        rearLeft.setPower(power);
+        frontRight.setPower(power);
+        rearRight.setPower(power);
+        sleep(duration);
+        frontLeft.setPower(0);
+        rearLeft.setPower(0);
+        frontRight.setPower(0);
+        rearRight.setPower(0);
+    }
+
+    private void moveDrivetrainNoStop(DcMotor frontLeft, DcMotor rearLeft, DcMotor frontRight, DcMotor rearRight, double power, int duration) {
         frontLeft.setPower(power);
         rearLeft.setPower(power);
         frontRight.setPower(power);
