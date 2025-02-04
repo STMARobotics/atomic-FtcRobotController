@@ -60,6 +60,9 @@ public class SpecimineSkeleton extends LinearOpMode {
 
         slideServo.setPosition(0);
 
+        // Move the drivetrain forward a bit so the arm can actually go out without breaking
+        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, 0.3, 250);
+
         // Move slide up to allow the arm to go out
         slideControl.autoSlideMover(-2000);
 
