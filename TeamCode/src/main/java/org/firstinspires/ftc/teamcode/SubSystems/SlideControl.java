@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+
 public class SlideControl extends SubsystemBase {
 
     private DcMotorEx slide;
@@ -26,6 +28,7 @@ public class SlideControl extends SubsystemBase {
 
     public SlideControl() {
     }
+
 
     public void resetEncoder() {
         slide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);

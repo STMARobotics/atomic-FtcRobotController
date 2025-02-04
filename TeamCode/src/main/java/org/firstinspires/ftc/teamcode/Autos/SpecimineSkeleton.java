@@ -58,6 +58,8 @@ public class SpecimineSkeleton extends LinearOpMode {
 
         fieldOffset = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
 
+        slideServo.setPosition(0);
+
         // Move slide up to allow the arm to go out
         slideControl.autoSlideMover(-2000);
 
@@ -103,13 +105,13 @@ public class SpecimineSkeleton extends LinearOpMode {
 //        // Etc
 
         // If* strafe works
-        strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, RIGHT, 0.3, 1000);
+        strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.3, 1000);
 
         // Move to first
         moveDrivetrain(frontLeft, rearLeft, rearRight, frontRight, -0.3, 1000);
 
         // Strafe to first
-        strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, RIGHT, 0.3, 500);
+        strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.3, 500);
 
         // Put first in area
         moveDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.3, 1000);
@@ -118,7 +120,7 @@ public class SpecimineSkeleton extends LinearOpMode {
         moveDrivetrain(frontLeft, rearLeft, rearRight, frontRight, -0.3, 1000);
 
         // Strafe to 2nd
-        strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, RIGHT, 0.3, 500);
+        strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.3, 500);
 
         // Put 2nd in area
         moveDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.3, 1000);
@@ -127,7 +129,7 @@ public class SpecimineSkeleton extends LinearOpMode {
         moveDrivetrain(frontLeft, rearLeft, rearRight, frontRight, -0.3, 1000);
 
         // Strafe to 3rd
-        strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, RIGHT, 0.3, 500);
+        strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.3, 500);
 
         // Put 3rd in area
         moveDrivetrain(frontLeft, rearLeft, rearRight, frontRight, -0.3, 1000);
@@ -135,8 +137,9 @@ public class SpecimineSkeleton extends LinearOpMode {
         // Go forward
         moveDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.3, 1000);
 
-        //GOOBER\/\/\/\/\/
 
+        strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.1, 10000);
+        rotateToAngle(frontLeft, rearLeft, rearRight, frontRight, 90);
 
         telemetry.addData("Autonomous", "Complete");
         telemetry.update();
@@ -151,13 +154,11 @@ public class SpecimineSkeleton extends LinearOpMode {
         sleep(duration);
     }
 
-    private void strafeDrivetrain(DcMotor frontLeft, DcMotor rearLeft, DcMotor frontRight, DcMotor rearRight, double direction, double power, int duration) {
-        double RIGHT = power*1;
-        double LEFT = -power;
-        frontLeft.setPower(power);
-        rearLeft.setPower(-power);
-        frontRight.setPower(-power);
-        rearRight.setPower(power);
+    private void strafeDrivetrain(DcMotor frontLeft, DcMotor rearLeft, DcMotor frontRight, DcMotor rearRight, double power1, int duration) {
+        frontLeft.setPower(-power1);
+        rearLeft.setPower(power1);
+        frontRight.setPower(-power1);
+        rearRight.setPower(power1);
         sleep(duration);
     }
 

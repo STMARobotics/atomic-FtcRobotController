@@ -31,6 +31,8 @@ public class FCDPID extends LinearOpMode {
     private double lastPresetCycle = 0;
     private boolean lastLeftBumperState = false;
     private boolean lastRightBumperState = false;
+    private boolean settingSlideTargetHigher;
+    private boolean turningOffSlide;
 
 
     @Override
@@ -163,7 +165,7 @@ public class FCDPID extends LinearOpMode {
             }
 
             if (gamepad2.a) {
-                targetSlidePosition = -5;
+                targetSlidePosition = -15;
                 slideControl.setTargetPosition(targetSlidePosition);
             }
 
@@ -198,10 +200,10 @@ public class FCDPID extends LinearOpMode {
                         targetArmPosition = 0;
                         break;
                     case 2:
-                        targetArmPosition = -850;
+                        targetArmPosition = -775;
                         break;
                     case 3:
-                        targetArmPosition = -1600;
+                        targetArmPosition = -1815;
                         break;
                     case 4:
                         targetArmPosition = -3350;
@@ -230,7 +232,7 @@ public class FCDPID extends LinearOpMode {
                 slideControl.setSlidePower(0);
             }
 
-            if (slideControl.getSlideAmps > 4) {
+            if (slideControl.getSlideAmps() > 4) {
                 targetSlidePosition += -5;
                 slideControl.setTargetPosition(targetSlidePosition);
                 boolean settingSlideTargetHigher = true;
@@ -238,8 +240,8 @@ public class FCDPID extends LinearOpMode {
                 settingSlideTargetHigher = false;
             }
 
-            if (slideControl.getSlideAmps > 5) {
-                slideControl.setPower(0);
+            if (slideControl.getSlideAmps() > 5) {
+                slideControl.setSlidePower(0);
                 boolean turningOffSlide = true;
             } else {
                 turningOffSlide = false;

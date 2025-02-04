@@ -54,16 +54,18 @@ public class Auto14volt extends LinearOpMode {
         waitForStart();
         if (isStopRequested()) return;
 
+        // Start auto
         fieldOffset = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
 
         slideControl.setServoPosition(0);
 
-        // move to basket
-        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, -0.6, 400);
+        // drive from wall
+        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, -0.6, 400); //update
 
         rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, -45);
 
-        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, 0.6, 625);
+        // drive backwards to basket
+        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, 0.6, 625); //update
         stopDrivetrain(frontLeft, rearLeft, rearRight, frontRight);
 
         //drop 1st sample in basket
@@ -79,7 +81,9 @@ public class Auto14volt extends LinearOpMode {
 
         //grab second
         intake.setPower(1);
-        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, -0.3, 750);
+
+        //drive forward; grab the 2nd block (first on field)
+        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, -0.3, 750); //update
         stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
         intake.setPower(0);
         armControl.autoArmMover(1540);
@@ -89,8 +93,8 @@ public class Auto14volt extends LinearOpMode {
         armControl.autoArmMover(4950);
         slideControl.setServoPosition(0);
 
-        //move to drop 2nd
-        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, 0.3, 500);
+        //drive backwards to basket; drop 2nd reverse
+        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, 0.3, 500); //update
 
         rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, -45);
 
@@ -105,12 +109,14 @@ public class Auto14volt extends LinearOpMode {
 
         stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
 
-        rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, 12);
+        rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, 9);
 
         //grab 3rd and drop 3rd
         armControl.autoArmMover(4950);
         intake.setPower(1);
-        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, -0.3, 650);
+
+        //drive forward to grab 3rd (2nd on field)
+        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, -0.3, 650); //update
         stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
         intake.setPower(0);
         armControl.autoArmMover(1540);
@@ -118,7 +124,9 @@ public class Auto14volt extends LinearOpMode {
         sleep(300);
         intake.setPower(0);
         armControl.autoArmMover(4950);
-        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, 0.3, 500);
+
+        // drive backwards to basket 3rd
+        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, 0.3, 500); //update
         stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
         rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, -45);
         slideControl.autoSlideMover(-3550);

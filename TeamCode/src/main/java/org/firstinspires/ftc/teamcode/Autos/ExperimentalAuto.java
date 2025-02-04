@@ -53,8 +53,8 @@ public class ExperimentalAuto extends LinearOpMode {
         variableFactory.updateBatteryVoltage(batteryVoltage);
 
         telemetry.addData("voltage check", batteryVoltage);
-        telemetry.addData("variableFactory check", variableFactory.getVariable("moveTo1stBasketPower"));
-        telemetry.addData("variableFactory check2", variableFactory.getVariable("rotateToDrop1stAngle"));
+        telemetry.addData("variableFactory check", variableFactory.getVariable(""));
+        telemetry.addData("variableFactory check2", variableFactory.getVariable("moveto1stBasketDuration2"));
         telemetry.update();
 
         if (isStopRequested()) return;
@@ -65,7 +65,7 @@ public class ExperimentalAuto extends LinearOpMode {
 
             mainSubsystem.rotateToAngle(variableFactory.getVariable("rotateToDrop1stAngle"));
 
-            mainSubsystem.moveDrivetrain(variableFactory.getVariable("moveTo1stBasketPower2"), variableFactory.getVariable("moveTo1stBasketDuration2"));
+            mainSubsystem.moveDrivetrain(variableFactory.getVariable("moveTo1stBasketPower2"), variableFactory.getVariable("moveto1stBasketDuration2"));
             mainSubsystem.stopDrivetrain();
 
             slideControl.autoSlideMover(-3550);
