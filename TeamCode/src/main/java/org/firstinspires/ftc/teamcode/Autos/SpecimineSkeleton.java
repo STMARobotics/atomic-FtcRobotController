@@ -58,85 +58,77 @@ public class SpecimineSkeleton extends LinearOpMode {
 
         fieldOffset = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
 
-        slideServo.setPosition(0);
+        // move forward so arm goes out
+        moveDrivetrainNoStop(frontLeft, rearLeft, frontRight, rearRight, -0.1, 750);
 
-        // Move the drivetrain forward a bit so the arm can actually go out without breaking
-        moveDrivetrainNoStop(frontLeft, rearLeft, frontRight, rearRight, -0.3, 250);
+        stopDrivetrain(frontLeft, rearLeft, rearRight, frontRight);
 
-        // Move slide up to allow the arm to go out
+        // slide up
         slideControl.autoSlideMover(-2000);
 
-        // Move arm out, we will need to change this value because theres no way its right first try
-        armControl.autoArmMover(2000);
+        // arm out
+        armControl.autoArmMover(3000);
+
+        // slide down
+        slideControl.autoSlideMover(0);
 
         // Stop
         stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
 
-        // Move forward to the bar with arm up
-        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, -0.7, 2500);
+        intake.setPower(0.3);
 
-        // Move backward to hook it and stuff!1!!!1!1!
-        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, 0.3, 1500);
+        // hang spec
+        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, -0.4, 1500);
 
-//        // Backup if strafe doesnt work
-//        rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, 90);
+        // arm a bit down for a sec
+        armControl.autoArmMover(3150);
+
+        // back up
+        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, 0.4, 1500);
+
+        // strafe
+        strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.4, 1500);
+
+        intake.setPower(0);
+
+        // do yuh stuff idk
+        armControl.autoArmMover(4950);
+
+        rotateToAngle(frontLeft, rearLeft, rearRight, frontRight, 0);
+
+//        // If* strafe works
+//        strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.3, 1000);
 //
-//        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, -0.6, 1500);
+//        // Move to first
+//        moveDrivetrain(frontLeft, rearLeft, rearRight, frontRight, -0.3, 1000);
 //
-//        stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
+//        // Strafe to first
+//        strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.3, 500);
 //
-//        rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, 0);
+//        // Put first in area
+//        moveDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.3, 1000);
 //
-//        movedrivetrain(frontLeft, rearLeft, frontRight, rearRight, 0.6, 1500);
+//        // Go forward
+//        moveDrivetrain(frontLeft, rearLeft, rearRight, frontRight, -0.3, 1000);
 //
-//        stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
+//        // Strafe to 2nd
+//        strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.3, 500);
 //
-//        rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, 90);
+//        // Put 2nd in area
+//        moveDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.3, 1000);
 //
-//        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, -0.6, 1500);
+//        // Go forward
+//        moveDrivetrain(frontLeft, rearLeft, rearRight, frontRight, -0.3, 1000);
 //
-//        stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
+//        // Strafe to 3rd
+//        strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.3, 500);
 //
-//        rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, 0);
+//        // Put 3rd in area
+//        moveDrivetrain(frontLeft, rearLeft, rearRight, frontRight, -0.3, 1000);
 //
-//        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, 0.6, 1500);
+//        // Go forward
+//        moveDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.3, 1000);
 //
-//        stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
-//        // Etc
-
-        // If* strafe works
-        strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.3, 1000);
-
-        // Move to first
-        moveDrivetrain(frontLeft, rearLeft, rearRight, frontRight, -0.3, 1000);
-
-        // Strafe to first
-        strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.3, 500);
-
-        // Put first in area
-        moveDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.3, 1000);
-
-        // Go forward
-        moveDrivetrain(frontLeft, rearLeft, rearRight, frontRight, -0.3, 1000);
-
-        // Strafe to 2nd
-        strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.3, 500);
-
-        // Put 2nd in area
-        moveDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.3, 1000);
-
-        // Go forward
-        moveDrivetrain(frontLeft, rearLeft, rearRight, frontRight, -0.3, 1000);
-
-        // Strafe to 3rd
-        strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.3, 500);
-
-        // Put 3rd in area
-        moveDrivetrain(frontLeft, rearLeft, rearRight, frontRight, -0.3, 1000);
-
-        // Go forward
-        moveDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.3, 1000);
-
 
         strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.1, 10000);
         rotateToAngle(frontLeft, rearLeft, rearRight, frontRight, 90);
