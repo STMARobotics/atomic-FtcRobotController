@@ -105,7 +105,7 @@ public class Auto14volt extends LinearOpMode {
         slideControl.setServoPosition(-80);
         sleep(850);
         slideControl.setServoPosition(0);
-        slideControl.autoSlideMover(-10);
+        slideControl.autoSlideMover(-30); //here
 
         stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
 
@@ -133,7 +133,7 @@ public class Auto14volt extends LinearOpMode {
         slideControl.setServoPosition(-80);
         sleep(850);
         slideControl.setServoPosition(0);
-        slideControl.autoSlideMover(0);
+        slideControl.autoSlideMover(-30);
 
         rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, 0);
 
@@ -191,6 +191,7 @@ public class Auto14volt extends LinearOpMode {
             telemetry.addData("Current Angle", currentAngle);
             telemetry.addData("Target Angle", targetAngle);
             telemetry.addData("Error", error);
+//            telemetry.addData("Slide Position", );
             telemetry.update();
         }
 

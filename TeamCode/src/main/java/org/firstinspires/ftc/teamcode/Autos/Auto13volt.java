@@ -105,7 +105,7 @@ public class Auto13volt extends LinearOpMode {
         sleep(850);
         slideControl.setServoPosition(0);
         //in parallel with moving\/\/\/
-        slideControl.autoSlideMover(-10);
+        slideControl.autoSlideMover(-30);
         //in parallel with moving/\/\/\
 
         stopDrivetrain(frontLeft, rearLeft, frontRight, rearRight);
@@ -133,7 +133,7 @@ public class Auto13volt extends LinearOpMode {
         sleep(850);
         slideControl.setServoPosition(0);
         //do in parallel with rotating\/\/\/
-        slideControl.autoSlideMover(0);
+        slideControl.autoSlideMover(-30);
 
         rotateToAngle(frontLeft, rearLeft, frontRight, rearRight, 0);
 

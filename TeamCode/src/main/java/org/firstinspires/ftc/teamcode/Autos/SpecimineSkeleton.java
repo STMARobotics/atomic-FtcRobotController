@@ -59,12 +59,13 @@ public class SpecimineSkeleton extends LinearOpMode {
         fieldOffset = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
 
         // move forward so arm goes out
-        moveDrivetrainNoStop(frontLeft, rearLeft, frontRight, rearRight, -0.1, 750);
+        moveDrivetrainNoStop(frontLeft, rearLeft, frontRight, rearRight, -0.1, 1000);
 
         stopDrivetrain(frontLeft, rearLeft, rearRight, frontRight);
 
         // slide up
         slideControl.autoSlideMover(-2000);
+        slideControl.setServoPosition(0);
 
         // arm out
         armControl.autoArmMover(3000);
@@ -78,26 +79,92 @@ public class SpecimineSkeleton extends LinearOpMode {
         intake.setPower(0.3);
 
         // hang spec
-        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, -0.4, 1500);
+        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, -0.4, 1250);
 
         // arm a bit down for a sec
-        armControl.autoArmMover(3150);
+        armControl.autoArmMover(3200);
+
+        // strafe to clear hanging specimen
+        strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.4, 500);
 
         // back up
-        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, 0.4, 1500);
+        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, 0.4, 1000);
 
         // strafe
-        strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.4, 1500);
+        //strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.4, 1500);
 
         intake.setPower(0);
 
         // do yuh stuff idk
         armControl.autoArmMover(4950);
 
+        // rotate counter clockwise
+        rotateToAngle(frontLeft, rearLeft, rearRight, frontRight, 82);
+
+        // backup towards human player
+        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, 0.6, 1200);
+
+        // strafe away from human player
+        strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.8, 500);
+
+        // rotate counter clockwise
+        rotateToAngle(frontLeft, rearLeft, rearRight, frontRight, 175);
+
+        // arm to specimen level at human player
+        armControl.autoArmMover(4050);
+
+        intake.setPower(0.3);
+
+        // drive slowly to wall
+        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, -0.1, 2500);
+
+        // arm above scoring position
+        armControl.autoArmMover(2000);
+
+        // back away from wall
+//        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, 0.3, 200);
+
+        // rotate counter clockwise
+        rotateToAngle(frontLeft, rearLeft, rearRight, frontRight, 95);
+
+        // drive forward towards submersible
+        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, -0.6, 1200);
+
+        // rotate to face submersible
         rotateToAngle(frontLeft, rearLeft, rearRight, frontRight, 0);
 
+        // back up to wall
+        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, 0.3, 1500);
+
+        // arm in scoring position
+        armControl.autoArmMover(3000);
+
+        // forward to score
+        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, -0.4, 1200);
+
+        intake.setPower(-0.3);
+
+        // arm a bit down for a sec
+        armControl.autoArmMover(3200);
+
+        // strafe to clear hanging specimen
+        strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.4, 500);
+
+        // backup to wall
+        moveDrivetrain(frontLeft, rearLeft, frontRight, rearRight, 0.4, 1500);
+
+        // do yuh stuff idk
+        armControl.autoArmMover(4950);
+
+        // strafe to park and celebrate
+        strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.6, 1000);
+
+
+
+
+        //----------------------------------------------------------------
 //        // If* strafe works
-//        strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.3, 1000);
+        //strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.3, 1000);
 //
 //        // Move to first
 //        moveDrivetrain(frontLeft, rearLeft, rearRight, frontRight, -0.3, 1000);
@@ -130,8 +197,8 @@ public class SpecimineSkeleton extends LinearOpMode {
 //        moveDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.3, 1000);
 //
 
-        strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.1, 10000);
-        rotateToAngle(frontLeft, rearLeft, rearRight, frontRight, 90);
+//        strafeDrivetrain(frontLeft, rearLeft, rearRight, frontRight, 0.1, 10000);
+//        rotateToAngle(frontLeft, rearLeft, rearRight, frontRight, 90);
 
         telemetry.addData("Autonomous", "Complete");
         telemetry.update();
