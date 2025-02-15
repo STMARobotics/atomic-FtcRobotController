@@ -141,7 +141,7 @@ public class Auto14volt extends LinearOpMode {
         telemetry.update();
         slideControl.update();
     }
-
+//random
     private void moveDrivetrain(DcMotor frontLeft, DcMotor rearLeft, DcMotor frontRight, DcMotor rearRight, double power, int duration) {
         frontLeft.setPower(power);
         rearLeft.setPower(power);
